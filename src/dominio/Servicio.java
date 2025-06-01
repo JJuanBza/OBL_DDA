@@ -1,12 +1,12 @@
 package dominio;
 
 import dominio.user.Cliente;
-import dominio.beneficio.Consumo;
-import dominio.beneficio.Regalo;
+import dominio.beneficio.Consumo.Consumo;
+import dominio.beneficio.Regalo.Regalo;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Servicio implements Consumo, Regalo{
+public class Servicio {
 
 	private Cliente cliente;
 
@@ -33,14 +33,7 @@ public class Servicio implements Consumo, Regalo{
 	 * }
 	 */
 	public void confirmar(Date fecha) {
-            for(Pedido p : this.pedidos){
-                try{
-                    p.validarDisponibilidad(fecha);
-                    p.agregarPedido();
-                }catch(){
-	  
-                }
-            }
+
 	}
 
 	/**
@@ -60,14 +53,5 @@ public class Servicio implements Consumo, Regalo{
 
 	}
 
-        @Override
-        public void calcularConsumo() {
-            
-        }
-
-        @Override
-        public void calcularRegalo() {
-            
-        }
 
 }

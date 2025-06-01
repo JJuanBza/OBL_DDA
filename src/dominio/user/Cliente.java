@@ -1,7 +1,8 @@
 package dominio.user;
 
-import dominio.beneficio.Regalo;
-import dominio.beneficio.Consumo;
+import dominio.user.TipoCliente.TipoCliente;
+import dominio.beneficio.Regalo.Regalo;
+import dominio.beneficio.Consumo.Consumo;
 import dominio.Servicio;
 
 public class Cliente extends Usuario{

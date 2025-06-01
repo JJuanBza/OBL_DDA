@@ -2,8 +2,8 @@ package dominio.user;
 
 import dominio.Dispositivo;
 import dominio.Servicio;
-import dominio.beneficio.Regalo;
-import dominio.beneficio.Consumo;
+import dominio.beneficio.Regalo.Regalo;
+import dominio.beneficio.Consumo.Consumo;
 
 public abstract class TipoUsuario {
 
