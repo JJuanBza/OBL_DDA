@@ -1,19 +1,22 @@
 package dominio;
 
 import dominio.user.Cliente;
-import dominio.user.TipoUsuario;
 import java.util.Date;
 
 public class Dispositivo {
 
-	private static int numero;
+	private static int contador = 0;
+        private final int id;
 
 	private Servicio servicio;
 
 	private Cliente cliente;
 
-	private TipoUsuario tipoUsuario;
-
+        public Dispositivo(){
+            this.id = contador++;
+            this.cliente = null;
+            this.servicio = null;
+        }
 
 	public void confirmar(Date fecha) {
 

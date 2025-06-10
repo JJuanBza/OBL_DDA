@@ -1,8 +1,6 @@
 package dominio;
 
 import dominio.user.Cliente;
-import dominio.beneficio.Consumo.Consumo;
-import dominio.beneficio.Regalo.Regalo;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,11 +14,31 @@ public class Servicio {
 
 	private float montoBeneficio;
 
-	private Consumo consumo;
-
-	private Regalo regalo;
-
 	private Unidad unidad;
+
+    public void setMontoBeneficio(float montoBeneficio) {
+        this.montoBeneficio = montoBeneficio;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public ArrayList<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public float getMontoTotal() {
+        return montoTotal;
+    }
+
+    public float getMontoBeneficio() {
+        return montoBeneficio;
+    }
+
+    public Unidad getUnidad() {
+        return unidad;
+    }
 
 	/**
 	 * foreach(Pedido p in this.pedidos){
@@ -50,8 +68,26 @@ public class Servicio {
 	}
 
 	public void agregarPedido(Pedido p) {
-
+            //agregar pedido
+            this.pedidos.add(p);
+            
+            this.montoTotal += p.getPrecio();
 	}
 
+        public void pagarServicio(){
+            //caclular beneficio
+            float beneficio = cliente.calcularMontoBeneficio();
+            
+            this.montoBeneficio = beneficio;
+            this.montoTotal -= this.montoBeneficio;
+        }
 
+        public int obtenerTotalIncidencias(Item i) {
+            int total = 0;
+            for(Pedido p : this.getPedidos()){
+                if(p.equals(new Pedido(i))) total++;
+            }
+            
+            return total;
+        }
 }
