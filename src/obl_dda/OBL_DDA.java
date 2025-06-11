@@ -4,6 +4,8 @@
  */
 package obl_dda;
 
+import vista.MenuDesarrollador;
+
 /**
  *
  * @author Emiliano Barcosta
@@ -14,7 +16,7 @@ public class OBL_DDA {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        new MenuDesarrollador().setVisible(true);
     }
     
 }

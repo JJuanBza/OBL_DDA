@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class Fachada {
 
-	private Fachada instancia;
+	private static Fachada instancia = new Fachada();
 
 	private ServicioUsuario servicioUsuario;
 
@@ -15,9 +15,11 @@ public class Fachada {
 
 	private ServicioDispositivo servicioDispositivo;
 
-	public Fachada getInstancia() {
-		return null;
-	}
+	
+
+        public static Fachada getInstancia() {
+            return instancia;
+        }
 
 	public int getMenu() {
 		return 0;
