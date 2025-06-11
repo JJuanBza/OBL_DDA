@@ -19,8 +19,8 @@ public class ServicioUsuario {
         this.gestores = new ArrayList();
     }
     
-    public Cliente loginCliente(Cliente c){
-        Cliente encontrado = (Cliente) this.buscarUsuario(clientes, c);
+    public Cliente loginCliente(String usuario, String password){
+        Cliente encontrado = (Cliente) this.buscarUsuario(clientes, new Cliente(usuario, password));
         return encontrado;
     };
     

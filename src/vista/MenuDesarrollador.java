@@ -79,7 +79,7 @@ public class MenuDesarrollador extends javax.swing.JFrame {
         //pedir lista categorias
         //mandar a vista 
         
-        new Clientes().setVisible(true);
+        new Clientes(null).setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

@@ -26,8 +26,8 @@ public class Fachada {
 		return 0;
 	}
 
-	public Cliente loginCliente(int numero, String password, int idDispositivo) {
-            return null;
+	public Cliente loginCliente(String numero, String password, int idDispositivo) {
+            return this.servicioUsuario.loginCliente(numero, password);
 	}
 
 	public Gestor loginGestor(String usuario, String password) {

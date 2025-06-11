@@ -10,6 +10,11 @@ public class Cliente extends Usuario{
 
     private TipoCliente tipoCliente;
 
+    
+    public Cliente(String usuario, String contra){
+        super(usuario, contra);
+    }
+    
     public Cliente(String usuario, String contra, String nombrecompleto){
         super(usuario, contra, nombrecompleto);
     }
