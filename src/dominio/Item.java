@@ -14,11 +14,27 @@ public class Item {
 
 	private Categoria categoria;
 
-	private Item item;
 
-	private Insumo insumo;
-
-
+        public Item(String nombre, Unidad u, Categoria c, ArrayList<Ingrediente> lista, float precio){
+            this.nombre = nombre;
+            this.categoria = c;
+            this.unidadProcesadora = u;
+            this.ingredientes = lista;
+            this.precio = precio;
+        }
+        
+        public Item(String nombre, Unidad u, Categoria c, float precio){
+            this.nombre = nombre;
+            this.categoria = c;
+            this.unidadProcesadora = u;
+            this.precio = precio;
+            this.ingredientes = new ArrayList();
+        }
+        
+        public void agregarIngrediente(Ingrediente i){
+            this.ingredientes.add(i);
+        }
+        
 	public String getUnidad() {
 		return null;
 	}

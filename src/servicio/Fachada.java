@@ -3,13 +3,14 @@ package servicio;
 import dominio.user.Cliente;
 import dominio.user.Gestor;
 import dominio.Pedido;
+import dominio.Unidad;
 import java.util.Date;
 
 public class Fachada {
 
 	private static Fachada instancia = new Fachada();
 
-	private ServicioUsuario servicioUsuario;
+	private ServicioUsuario servicioUsuario = new ServicioUsuario();
 
 	private ServicioGestor servicioGestor;
 
@@ -26,11 +27,11 @@ public class Fachada {
 	}
 
 	public Cliente loginCliente(int numero, String password, int idDispositivo) {
-		return null;
+            return null;
 	}
 
 	public Gestor loginGestor(String usuario, String password) {
-		return null;
+            return this.servicioUsuario.loginGestor(usuario, password);
 	}
 
 	public void agregarPedido(Pedido p, int idDispositivo) {
@@ -49,4 +50,11 @@ public class Fachada {
 
 	}
 
+        public void agregarCliente(String user, String pass, String nomCompleto){
+            this.servicioUsuario.agregarCliente(user, pass, nomCompleto);
+        }
+        
+        public void agregarGestor(String user, String pass, String nomCompleto, Unidad u){
+            this.servicioUsuario.agregarGestor(user, pass, nomCompleto, u);
+        }
 }

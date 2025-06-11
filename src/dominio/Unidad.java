@@ -11,9 +11,16 @@ public class Unidad {
 
 	private ArrayList<Pedido> pedidos;
 
+        
+        public Unidad(String nom){
+            this.nombre = nom;
+            this.gestores = new ArrayList();
+            this.pedidos = new ArrayList();
+        }
+        
 
 	public String getUnidad() {
-		return null;
+            return this.nombre;
 	}
 
 	public String getGestor() {

@@ -22,6 +22,12 @@ public class Pedido {
 	private Unidad unidad;
 
 
+        public Pedido(Item i, Unidad u){
+            this.item = i;
+            this.unidad = u;
+        }
+        
+        
 	public String getUnidad() {
 		return null;
 	}

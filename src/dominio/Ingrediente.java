@@ -4,8 +4,14 @@ public class Ingrediente {
 
 	private Insumo insumo;
 
-	private int cantidad;
+	private double cantidad;
 
+        
+        public Ingrediente(Insumo i, double cant){
+            this.cantidad = cant;
+            this.insumo = i;
+        }
+        
 	/**
 	 * try{
 	 * insumo.validarStock();

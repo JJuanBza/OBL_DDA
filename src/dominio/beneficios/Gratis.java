@@ -1,4 +1,4 @@
-package Beneficios;
+package dominio.beneficios;
 
 import dominio.Servicio;
 

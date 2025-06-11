@@ -8,4 +8,12 @@ public class Categoria {
 
 	private ArrayList<Item> items;
 
+        public Categoria(String nombre){
+            this.nombre = nombre;
+            this.items = new ArrayList();
+        }
+        
+        public void agregarItem(Item i){
+            this.items.add(i);
+        }
 }

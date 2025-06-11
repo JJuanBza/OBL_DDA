@@ -1,7 +1,7 @@
 package dominio.user;
 
-import Beneficios.Beneficio;
 import dominio.Servicio;
+import dominio.beneficios.Beneficio;
 import java.util.ArrayList;
 
 public class TipoCliente {

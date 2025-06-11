@@ -4,12 +4,15 @@ import dominio.Servicio;
 
 public class Cliente extends Usuario{
 
-	private boolean logged;
+    private boolean logged;
 
-	private Servicio servicio;
+    private Servicio servicio;
 
-	private TipoCliente tipoCliente;
+    private TipoCliente tipoCliente;
 
+    public Cliente(String usuario, String contra, String nombrecompleto){
+        super(usuario, contra, nombrecompleto);
+    }
         
     public boolean isLogged() {
         return logged;
