@@ -17,6 +17,12 @@ public class Dispositivo {
             this.cliente = null;
             this.servicio = null;
         }
+        
+        public void setCliente(Cliente c){ this.cliente = c;}
+        public void setServicio(Servicio s){ this.servicio = s;}
+        
+        public Cliente getCliente(){ return this.cliente;}
+        public Servicio getServicio(){ return this.servicio;}
 
 	public void confirmar(Date fecha) {
 

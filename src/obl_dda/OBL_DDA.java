@@ -33,6 +33,7 @@ public class OBL_DDA {
         
         Categoria postres = new Categoria("Postres");
         
+        
         Insumo arroz = new Insumo("Arroz", 2, 20);
         Insumo leche = new Insumo("Leche", 5, 15);
         Insumo azucar = new Insumo("Azucar", 1, 17);
@@ -63,7 +64,7 @@ public class OBL_DDA {
         
         postres.agregarItem(martinFierro);
         
-        
+        fachada.agregarCategoria(postres);
    
         //Insumo cafe = new Insumo("Granos Cafe", 2, 14);
         

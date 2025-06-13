@@ -4,8 +4,8 @@
  */
 package vista;
 
+import controlador.GestorControlador;
 import javax.swing.JOptionPane;
-import servicio.Fachada;
 
 /**
  *
@@ -13,11 +13,14 @@ import servicio.Fachada;
  */
 public class loginGestor extends javax.swing.JFrame {
 
+    private GestorControlador control;
+    
     /**
      * Creates new form loginGestor
      */
     public loginGestor() {
         initComponents();
+        control = new GestorControlador();
     }
 
     /**
@@ -116,7 +119,7 @@ public class loginGestor extends javax.swing.JFrame {
         String usr = txtUser.getText();
         String pwd = new String(txtPass.getPassword());
 
-        Object obj = Fachada.getInstancia().loginGestor(usr, pwd);
+        Object obj = this.control.loginGestor(usr, pwd);
         if(obj == null){
             JOptionPane.showMessageDialog(this, "Usuario y/o contraseña inválidos", "Ingreso a la aplicación", JOptionPane.ERROR_MESSAGE);
         } else {
@@ -124,7 +127,7 @@ public class loginGestor extends javax.swing.JFrame {
             new Gestores(gestor).setVisible(true);
             this.dispose(); // Cierra la ventana de login si querés
         }
-}
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

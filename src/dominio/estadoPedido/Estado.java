@@ -5,17 +5,14 @@ import dominio.Pedido;
 public abstract class Estado {
 
 	private Pedido pedido;
+        
+        
+        public Estado(Pedido p){ this.pedido = p;}
+        public Pedido getPedido(){ return this.pedido;}
+        
 
-	public void eliminar() {
-
-	}
-
-	public void confirmado() {
-
-	}
-
-	public void cobrar() {
-
-	}
+	public abstract void eliminar();
+	public abstract void confirmado();
+	public abstract void cobrar();
 
 }

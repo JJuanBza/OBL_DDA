@@ -4,9 +4,16 @@
  */
 package vista;
 
+import controlador.ClienteControlador;
+import dominio.Categoria;
+import dominio.Dispositivo;
+import dominio.Item;
 import dominio.user.Cliente;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
-import servicio.Fachada;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -14,18 +21,26 @@ import servicio.Fachada;
  */
 public class Clientes extends javax.swing.JFrame {
 
-    private Cliente clienteLogueado;
+    private ClienteControlador controlador;
+    private Cliente cliente;
+    private Dispositivo dispositivo;
 
     
     /**
      * Creates new form Cliente
      */
-    public Clientes(Cliente c) {
+    public Clientes(Cliente c, Dispositivo d) {
         initComponents();
         setLocationRelativeTo(null); 
         
-        this.clienteLogueado = c;
+        this.cliente = c;
         actualizarTitulo(c);
+        
+        this.dispositivo = d;
+        
+        this.controlador = new ClienteControlador(this.cliente, this);
+        
+        poblarCategoria();
     }
 
     /**
@@ -50,7 +65,7 @@ public class Clientes extends javax.swing.JFrame {
         lblMontoTotal2 = new javax.swing.JLabel();
         panelMensajes = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList<>();
+        jListComentarios = new javax.swing.JList<>();
         panelIdentificarse = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -62,10 +77,10 @@ public class Clientes extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jListCategorias = new javax.swing.JList();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        jListItems = new javax.swing.JList();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -79,10 +94,18 @@ public class Clientes extends javax.swing.JFrame {
         panelPedidos.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos del Servicio"));
 
         btnConfirmar.setText("Confirmar Pedidos");
-        btnConfirmar.setEnabled(false);
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
 
         btnFinalizar.setText("Finalizar Servicios");
-        btnFinalizar.setEnabled(false);
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarActionPerformed(evt);
+            }
+        });
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -153,12 +176,12 @@ public class Clientes extends javax.swing.JFrame {
 
         panelMensajes.setBorder(javax.swing.BorderFactory.createTitledBorder("Mensajes del Sistema"));
 
-        jList3.setModel(new javax.swing.AbstractListModel<String>() {
+        jListComentarios.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Mensajes del Sistema..." };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane8.setViewportView(jList3);
+        jScrollPane8.setViewportView(jListComentarios);
 
         javax.swing.GroupLayout panelMensajesLayout = new javax.swing.GroupLayout(panelMensajes);
         panelMensajes.setLayout(panelMensajesLayout);
@@ -223,14 +246,28 @@ public class Clientes extends javax.swing.JFrame {
         panelMenu.setBorder(javax.swing.BorderFactory.createTitledBorder("Menú"));
 
         btnAgregar.setText("AgregarPedido");
-        btnAgregar.setEnabled(false);
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("EliminarPedido");
-        btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Categoria"));
 
-        jScrollPane1.setViewportView(jList1);
+        jListCategorias.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListCategorias.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListCategoriasValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jListCategorias);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -251,7 +288,7 @@ public class Clientes extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Items"));
 
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(jListItems);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -362,7 +399,7 @@ public class Clientes extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 718, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4))
         );
@@ -385,6 +422,38 @@ public class Clientes extends javax.swing.JFrame {
         login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        this.controlador.agregarPedido(this.cliente, this.dispositivo);
+        validar("Realizar Pedidos");
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        validar("Eliminar Pedidos");
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        validar("Confirmar el Servicio");
+    }//GEN-LAST:event_btnConfirmarActionPerformed
+
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        validar("Finalizar el Servicio");
+    }//GEN-LAST:event_btnFinalizarActionPerformed
+
+    private void jListCategoriasValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCategoriasValueChanged
+        Categoria c = (Categoria) jListCategorias.getSelectedValue();
+        jListItems.setListData(c.getItems().toArray());
+        
+        /*
+        DefaultListModel<Item> modeloCategorias = new DefaultListModel<>();
+        for (Item i : c.getItems()) {
+            modeloCategorias.addElement(i);
+        }
+
+        jListItems.setModel(modeloCategorias);
+        */
+        
+    }//GEN-LAST:event_jListCategoriasValueChanged
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -393,39 +462,25 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
-    private javax.swing.JList<String> jList3;
+    private javax.swing.JList jListCategorias;
+    private javax.swing.JList<String> jListComentarios;
+    private javax.swing.JList jListItems;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JLabel lblMontoTotal;
-    private javax.swing.JLabel lblMontoTotal1;
     private javax.swing.JLabel lblMontoTotal2;
     private javax.swing.JLabel lbldinero;
     private javax.swing.JPanel panelIdentificarse;
@@ -440,14 +495,13 @@ public class Clientes extends javax.swing.JFrame {
         String usr = txtUser.getText();
         String pwd = new String(txtPass.getPassword());
 
-        Object obj = Fachada.getInstancia().loginCliente(usr, pwd, 0);
+        Object obj = this.controlador.loginCliente(usr, pwd, 0);
         if(obj == null){
             JOptionPane.showMessageDialog(this, "Usuario y/o contraseña inválidos", "Ingreso a la aplicación", JOptionPane.ERROR_MESSAGE);
         } else {
-            this.clienteLogueado = (Cliente) obj;
-            actualizarTitulo(this.clienteLogueado);
-            
-            btnAgregar.setEnabled(true);
+            this.cliente = (Cliente) obj;
+            actualizarTitulo(this.cliente);
+            this.dispositivo.setCliente(cliente);
         }
     }
 
@@ -455,4 +509,14 @@ public class Clientes extends javax.swing.JFrame {
         if(c == null) setTitle("Procesar Pedidos - debe logearse");
         else setTitle("Procesar Pedidos - " + c.getNombreCompleto());
     }
+
+    private void validar(String action) {
+        if(this.cliente == null) JOptionPane.showMessageDialog(this, "Debe Identificarse antes de " + action, "Realizar Pedidos", JOptionPane.ERROR_MESSAGE);;
+    }
+
+    private void poblarCategoria() {
+        jListCategorias.setListData(this.controlador.obtenerCategorias().toArray());
+    }
+
+    
 }

@@ -8,28 +8,53 @@ import java.util.Date;
 
 public class ServicioDispositivo {
 
-	private ArrayList<Categoria> categorias;
+    private ArrayList<Categoria> categorias;
 
-	private ArrayList<Dispositivo> dispositivos;
+    private ArrayList<Dispositivo> dispositivos;
 
-	private Dispositivo dispositivo;
+    private Dispositivo dispositivo;
 
-	private Categoria categoria;
+    private Categoria categoria;
 
-	public int getMenu() {
-		return 0;
-	}
+    
+    public ServicioDispositivo(){
+        this.categorias = new ArrayList();
+        this.dispositivos = new ArrayList();
+    }
 
-	public void confirmarServicio(Date fecha) {
+    public void setDispositivo(Dispositivo dispositivo) {
+        this.dispositivo = dispositivo;
+    }
 
-	}
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+    
+    
+    
+    
+    public int getMenu() {
+            return 0;
+    }
 
-	public void agregarPedido(Pedido p, int idDispositivo) {
+    public void confirmarServicio(Date fecha) {
 
-	}
+    }
 
-	public void eliminarPedido(Pedido p, int idDispositivo) {
+    public void agregarPedido(Pedido p, int idDispositivo) {
 
-	}
+    }
+
+    public void eliminarPedido(Pedido p, int idDispositivo) {
+
+    }
+
+    ArrayList<Categoria> getCategorias() {
+        return this.categorias;
+    }
+
+    void agregarCategoria(Categoria c) {
+        this.categorias.add(c);
+    }
 
 }
