@@ -9,11 +9,9 @@ public class Pedido {
 
 	private Item item;
 
-	private String mensaje;
+	private String comentario;
 
 	private Estado estado;
-
-	private String id;
 
 	private Gestor gestor;
 
@@ -22,9 +20,9 @@ public class Pedido {
 	private Unidad unidad;
 
 
-        public Pedido(Item i, Unidad u){
+        public Pedido(Item i, String comentario){
             this.item = i;
-            this.unidad = u;
+            this.comentario = comentario;
         }
         
         

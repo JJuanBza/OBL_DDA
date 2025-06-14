@@ -6,7 +6,7 @@ public class Cliente extends Usuario{
 
     private boolean logged;
 
-    private Servicio servicio;
+    //private Servicio servicio;
 
     private TipoCliente tipoCliente;
 
@@ -27,6 +27,7 @@ public class Cliente extends Usuario{
         this.logged = logged;
     }
 
+    /*
     public Servicio getServicio() {
         return servicio;
     }
@@ -34,6 +35,7 @@ public class Cliente extends Usuario{
     public void setServicio(Servicio servicio) {
         this.servicio = servicio;
     }
+*/
 
     public TipoCliente getTipoCliente() {
         return tipoCliente;
@@ -43,7 +45,9 @@ public class Cliente extends Usuario{
         this.tipoCliente = tipoCliente;
     }
 
+    /*
     public float calcularMontoBeneficio(){
         return this.tipoCliente.calcularMontoConBeneficios(servicio);
     }
+*/
 }

@@ -9,11 +9,7 @@ import dominio.Categoria;
 import dominio.Dispositivo;
 import dominio.Item;
 import dominio.user.Cliente;
-import java.util.ArrayList;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 /**
  *
@@ -25,7 +21,6 @@ public class Clientes extends javax.swing.JFrame {
     private Cliente cliente;
     private Dispositivo dispositivo;
 
-    
     /**
      * Creates new form Cliente
      */
@@ -59,13 +54,12 @@ public class Clientes extends javax.swing.JFrame {
         btnConfirmar = new javax.swing.JButton();
         btnFinalizar = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        tblPedidos = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         lbldinero = new javax.swing.JLabel();
         lblMontoTotal2 = new javax.swing.JLabel();
         panelMensajes = new javax.swing.JPanel();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        jListComentarios = new javax.swing.JList<>();
+        lblError = new javax.swing.JLabel();
         panelIdentificarse = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -83,7 +77,7 @@ public class Clientes extends javax.swing.JFrame {
         jListItems = new javax.swing.JList();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtComentario = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -107,7 +101,7 @@ public class Clientes extends javax.swing.JFrame {
             }
         });
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        tblPedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -126,7 +120,7 @@ public class Clientes extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane7.setViewportView(jTable4);
+        jScrollPane7.setViewportView(tblPedidos);
 
         jLabel6.setText("Monto Total:");
 
@@ -176,28 +170,23 @@ public class Clientes extends javax.swing.JFrame {
 
         panelMensajes.setBorder(javax.swing.BorderFactory.createTitledBorder("Mensajes del Sistema"));
 
-        jListComentarios.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Mensajes del Sistema..." };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane8.setViewportView(jListComentarios);
+        lblError.setText("Mensajes del Sistema...");
 
         javax.swing.GroupLayout panelMensajesLayout = new javax.swing.GroupLayout(panelMensajes);
         panelMensajes.setLayout(panelMensajesLayout);
         panelMensajesLayout.setHorizontalGroup(
             panelMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMensajesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane8)
-                .addContainerGap())
+                .addGap(17, 17, 17)
+                .addComponent(lblError)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelMensajesLayout.setVerticalGroup(
             panelMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMensajesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(102, 102, 102))
+            .addGroup(panelMensajesLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(lblError)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         panelIdentificarse.setBorder(javax.swing.BorderFactory.createTitledBorder("Identificarse"));
@@ -307,9 +296,9 @@ public class Clientes extends javax.swing.JFrame {
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Comentario"));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        txtComentario.setColumns(20);
+        txtComentario.setRows(5);
+        jScrollPane3.setViewportView(txtComentario);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -388,7 +377,7 @@ public class Clientes extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelMensajes, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelMensajes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -423,22 +412,25 @@ public class Clientes extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        this.controlador.agregarPedido(this.cliente, this.dispositivo);
-        validar("Realizar Pedidos");
+        this.controlador.agregarPedido(this.dispositivo, (Item)jListItems.getSelectedValue(), txtComentario.getText());
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        validar("Eliminar Pedidos");
+        this.controlador.eliminarPedido(this.dispositivo, tblPedidos.getSelectedRow());
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        validar("Confirmar el Servicio");
+        this.controlador.confirmarServicio(this.dispositivo);
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        validar("Finalizar el Servicio");
+        this.controlador.finalizarServicio(this.dispositivo);
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
+    private void poblarCategoria() {
+        jListCategorias.setListData(this.controlador.obtenerCategorias().toArray());
+    }
+    
     private void jListCategoriasValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCategoriasValueChanged
         Categoria c = (Categoria) jListCategorias.getSelectedValue();
         jListItems.setListData(c.getItems().toArray());
@@ -467,7 +459,6 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JList jListCategorias;
-    private javax.swing.JList<String> jListComentarios;
     private javax.swing.JList jListItems;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
@@ -478,15 +469,15 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTable jTable4;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblMontoTotal2;
     private javax.swing.JLabel lbldinero;
     private javax.swing.JPanel panelIdentificarse;
     private javax.swing.JPanel panelMensajes;
     private javax.swing.JPanel panelMenu;
     private javax.swing.JPanel panelPedidos;
+    private javax.swing.JTable tblPedidos;
+    private javax.swing.JTextArea txtComentario;
     private javax.swing.JPasswordField txtPass;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
@@ -502,6 +493,9 @@ public class Clientes extends javax.swing.JFrame {
             this.cliente = (Cliente) obj;
             actualizarTitulo(this.cliente);
             this.dispositivo.setCliente(cliente);
+            this.controlador.setCliente(cliente);
+            
+            mensaje("Bienvenido ", this.cliente.getNombreCompleto());
         }
     }
 
@@ -510,13 +504,12 @@ public class Clientes extends javax.swing.JFrame {
         else setTitle("Procesar Pedidos - " + c.getNombreCompleto());
     }
 
-    private void validar(String action) {
-        if(this.cliente == null) JOptionPane.showMessageDialog(this, "Debe Identificarse antes de " + action, "Realizar Pedidos", JOptionPane.ERROR_MESSAGE);;
+    public void mensaje(String ex, String msg) {
+        lblError.setText(ex + msg);
     }
 
-    private void poblarCategoria() {
-        jListCategorias.setListData(this.controlador.obtenerCategorias().toArray());
+    public void mensaje(String ex){
+        lblError.setText(ex);
     }
-
     
 }
