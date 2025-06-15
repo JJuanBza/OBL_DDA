@@ -1,6 +1,7 @@
 package dominio.user;
 
 import dominio.Servicio;
+import excepciones.IdentificacionException;
 
 public class Cliente extends Usuario{
 
@@ -19,13 +20,15 @@ public class Cliente extends Usuario{
         super(usuario, contra, nombrecompleto);
     }
         
-    public boolean isLogged() {
-        return logged;
+    public void isLogged() throws IdentificacionException{
+        if(this.logged) throw new IdentificacionException("Ud. ya está identificado en otro dispositivo");
     }
 
-    public void setLogged(boolean logged) {
-        this.logged = logged;
+    public void logIN() {
+        this.logged = true;
     }
+    
+    public void LogOUT(){ this.logged = false;}
 
     /*
     public Servicio getServicio() {
@@ -50,4 +53,6 @@ public class Cliente extends Usuario{
         return this.tipoCliente.calcularMontoConBeneficios(servicio);
     }
 */
+    
+    
 }

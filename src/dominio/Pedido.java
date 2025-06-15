@@ -1,77 +1,99 @@
 package dominio;
 
+import dominio.estadoPedido.Confirmado;
 import dominio.estadoPedido.Estado;
+import dominio.estadoPedido.NoConfirmado;
+import dominio.observer.Observable;
 import dominio.user.Gestor;
-import java.util.Date;
+import excepciones.PedidoClienteException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Pedido {
+public class Pedido extends Observable{
 
-	private Item item;
+    private Item item;
+    private String comentario;
+    private Estado estado = new NoConfirmado(this);
+    private Unidad unidad;
+    private Gestor gestor;
+    private double precio;
+    private LocalDateTime fecha;
 
-	private String comentario;
+    public enum Estados{NO_CONFIRMADO,CONFIRMADO,EN_PROCESO, FINALIZADO, ENTEGADO};
+    
+    public Pedido(Item i, String comentario){
+        this.item = i;
+        this.comentario = comentario;
+        this.precio = i.getPrecio();
+    }
+    
+    public Pedido(Item i){ this.item = i;}
 
-	private Estado estado;
 
-	private Gestor gestor;
+    public Item getItem(){ return this.item;}
+    
+    public String getComentario(){ return this.comentario;}
+    
+    public Estado getEstado(){ return this.estado;}
+    
+    public Unidad getUnidad() { return this.unidad;}
 
-	private Date fecha;
+    public Gestor getGestor() { return this.gestor;}
 
-	private Unidad unidad;
+    public double getPrecio() { return this.precio;}
 
 
-        public Pedido(Item i, String comentario){
-            this.item = i;
-            this.comentario = comentario;
-        }
+    
+    public void cambiarEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    boolean estoyConfirmado() {
+        return estado.mismoEstado(Estados.CONFIRMADO);
+    }
+
+    void confirmar(LocalDateTime fecha) throws PedidoClienteException {
+        //Descuenta el stock de los insumos de todos los ítems de los pedidos
+        this.item.descontarStock();
         
+        //envía los pedidos a la unidad procesadora correspondiente a cada ítem
+        this.agregarPedido();
         
-	public String getUnidad() {
-		return null;
-	}
+        //actualiza los datos del servicio
+        this.fecha = fecha;
+        this.estado.confirmar();
+    }
 
-	public String getGestor() {
-		return null;
-	}
+    /**
+     * item.validarDisponibilidad();
+     * this.fecha = fecha;
+     */
+    public void validarDisponibilidad() throws PedidoClienteException{
+        this.item.validarDisponibilidad();
+    }
 
-	public float getPrecio() {
-		return 0;
-	}
+    public void descontarStock(LocalDateTime fecha){
+        this.fecha = fecha;
+    }
+    /**
+     * unidad.eliminarPedido(this);
+     */
+    public void eliminar(Pedido p) {
 
-        
-        public Pedido(Item i){
-        
-        }
-        
-        
-	/**
-	 * item.validarDisponibilidad();
-	 * this.fecha = fecha;
-	 */
-	public void validarDisponibilidad(Date fecha) {
-            
-	}
+    }
 
-	/**
-	 * unidad.eliminarPedido(this);
-	 */
-	public void eliminar(Pedido p) {
 
-	}
+    public void validarEstado() throws Exception{
+        if(!estado.mismoEstado(Estados.NO_CONFIRMADO) && !estado.mismoEstado(Estados.CONFIRMADO)) throw new Exception("Un poco tarde… Ya estamos elaborando este pedido!");
+    }
 
-	/**
-	 * if(estado != NO CONFIRMADO || estado != CONFIRMADO) throw new Exception();
-	 */
-	public void validarEstado() {
+    /**
+     * unidad.agregarPedido(this);
+     */
+    public void agregarPedido() {
+        unidad.agregarPedido(this);
 
-	}
-
-	/**
-	 * unidad.agregarPedido(this);
-	 */
-	public void agregarPedido() {
-            unidad.agregarPedido(this);
-	}
+    }
 
     @Override
     public int hashCode() {
@@ -93,6 +115,5 @@ public class Pedido {
         final Pedido other = (Pedido) obj;
         return Objects.equals(this.item, other.item);
     }
-        
         
 }

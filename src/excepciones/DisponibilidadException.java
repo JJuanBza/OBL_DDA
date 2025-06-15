@@ -8,6 +8,6 @@ package excepciones;
  *
  * @author Emiliano Barcosta
  */
-public abstract class PedidoException extends Exception{
-    public PedidoException(String message){ super(message);}
+public class DisponibilidadException extends Exception{
+    public DisponibilidadException(String message){ super(message);}
 }

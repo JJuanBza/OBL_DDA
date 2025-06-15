@@ -20,6 +20,16 @@ public class Categoria {
     public ArrayList<Item> getItems() {
         return items;
     }
+    
+    public ArrayList<Item> obtenerItems(){
+        ArrayList<Item> itemsDisponibles = new ArrayList();
+        
+        for(Item i : this.items){
+            if(i.tengoStock()) itemsDisponibles.add(i);
+        }
+        
+        return itemsDisponibles;
+    }
         
     public void agregarItem(Item i){
         this.items.add(i);

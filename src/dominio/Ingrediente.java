@@ -19,8 +19,25 @@ public class Ingrediente {
 	 * 
 	 * }
 	 */
-	public void validarDisponibilidad(int cant) {
-
+	public void validarDisponibilidad() {
+            if(this.puedoHacerme()) this.descontarStock();
 	}
+        
+        public boolean puedoHacerme(){
+            return this.insumo.tengoStock(this.cantidad);
+        }
+        
+        public boolean tengoStock(){
+            return this.insumo.agotado();
+        }
+
+        void descontarStock() {
+            this.insumo.descontarStock(this.cantidad);
+        }
+
+    @Override
+    public String toString() {
+        return "Ingrediente{" + "insumo=" + insumo + '}';
+    }
 
 }

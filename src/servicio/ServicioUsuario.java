@@ -4,6 +4,7 @@ import dominio.Unidad;
 import dominio.user.Cliente;
 import dominio.user.Usuario;
 import dominio.user.Gestor;
+import excepciones.IdentificacionException;
 import java.util.ArrayList;
 
 public class ServicioUsuario {
@@ -19,13 +20,18 @@ public class ServicioUsuario {
         this.gestores = new ArrayList();
     }
     
-    public Cliente loginCliente(String usuario, String password){
+    public Cliente loginCliente(String usuario, String password) throws IdentificacionException{
         Cliente encontrado = (Cliente) this.buscarUsuario(clientes, new Cliente(usuario, password));
+        
+        if(encontrado == null) throw new IdentificacionException("Credenciales Incorrectas");
+        
         return encontrado;
     };
     
-    public Gestor loginGestor(String usuario, String password){
+    public Gestor loginGestor(String usuario, String password) throws IdentificacionException{
         Gestor encontrado = (Gestor) this.buscarUsuario(gestores, new Gestor(usuario, password));
+        
+        if(encontrado == null) throw new IdentificacionException("Credenciales Incorrectas");
         
         return encontrado;
     };
@@ -37,9 +43,7 @@ public class ServicioUsuario {
         
         return null;
     }
-    
-
-    private void logout(){};
+   
     
     public void agregarCliente(String user, String pass, String nomCompleto){
         this.clientes.add(new Cliente(user, pass, nomCompleto));

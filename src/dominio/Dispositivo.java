@@ -1,9 +1,17 @@
 package dominio;
 
+import controlador.ClienteControlador;
+import dominio.observer.Observable;
+import dominio.observer.Observador;
 import dominio.user.Cliente;
-import java.util.Date;
+import excepciones.IdentificacionException;
+import excepciones.PedidoClienteException;
+import excepciones.ValidacionMultipleException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Objects;
 
-public class Dispositivo {
+public class Dispositivo implements Observador{
 
     private static int contador = 0;
     private final int id;
@@ -14,33 +22,73 @@ public class Dispositivo {
     public Dispositivo(){
         this.id = contador++;
         this.cliente = null;
-        this.servicio = null;
+        this.servicio = new Servicio();
     }
 
-    public void setCliente(Cliente c){ this.cliente = c;}
+    public void setCliente(Cliente c){ 
+        this.cliente = c;
+        this.servicio.setCliente(c);
+    }
     public void setServicio(Servicio s){ this.servicio = s;}
 
     public Cliente getCliente(){ return this.cliente;}
     public Servicio getServicio(){ return this.servicio;}
+    
+    public void tengoCliente() throws IdentificacionException{
+        if(this.cliente != null) throw new IdentificacionException("Debe primero finalizar el servicio actual");
+    }
 
-    public void confirmar(Date fecha) {
-
+    public void confirmar(LocalDateTime fecha) throws PedidoClienteException, ValidacionMultipleException{
+        this.servicio.confirmar(fecha);
     }
 
     public void agregarPedido(Item i, String comentario) {
-        if(this.servicio == null){
-            this.servicio = new Servicio(this.cliente);
+        this.servicio.agregarPedido(i, comentario);
+    }
+
+    public void eliminarPedido(int indicePedido) throws Exception{
+        this.servicio.eliminarPedido(indicePedido);
+    }
+    
+    public ArrayList<Pedido> getPedidos(){
+        return this.servicio.getPedidos();
+    }
+    
+    public float getCostos(){ return this.servicio.getMontoTotal();}
+
+    
+    public void validarPedidos() throws PedidoClienteException{
+        this.servicio.existenPedidos();
+    }
+
+    @Override
+    public void actualizar(Observable origen, Object evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-
-        this.servicio.agregarPedido(new Pedido(i, comentario));
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Dispositivo other = (Dispositivo) obj;
+        return Objects.equals(this.servicio, other.servicio);
     }
 
-    public void eliminarPedido(Pedido p) {
-
-    }
-
-    public boolean validarPedidos() {
-        return this.servicio.existenPedidos();
+    public void asociarObservadorController(ClienteControlador controlador) {
+        this.servicio.agregarObservador(controlador);
     }
 
 }

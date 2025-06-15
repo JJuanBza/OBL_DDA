@@ -11,12 +11,12 @@ import javax.swing.JLabel;
  *
  * @author Emiliano Barcosta
  */
-public class Gestores extends javax.swing.JFrame {
+public class VistaGestores extends javax.swing.JFrame {
 
     /**
      * Creates new form Gestor
      */
-    public Gestores(dominio.user.Gestor g) {
+    public VistaGestores(dominio.user.Gestor g) {
         initComponents();
         
         lblName.setText("Gestor: " + g.getNombre() + " | Unidad Procesadora: " + g.getNombreUnidad());

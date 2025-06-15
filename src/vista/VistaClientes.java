@@ -8,34 +8,39 @@ import controlador.ClienteControlador;
 import dominio.Categoria;
 import dominio.Dispositivo;
 import dominio.Item;
+import dominio.Pedido;
 import dominio.user.Cliente;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Emiliano Barcosta
  */
-public class Clientes extends javax.swing.JFrame {
+public class VistaClientes extends javax.swing.JFrame {
 
     private ClienteControlador controlador;
-    private Cliente cliente;
-    private Dispositivo dispositivo;
 
     /**
      * Creates new form Cliente
      */
-    public Clientes(Cliente c, Dispositivo d) {
+    public VistaClientes() {
         initComponents();
         setLocationRelativeTo(null); 
         
-        this.cliente = c;
-        actualizarTitulo(c);
+        this.controlador = new ClienteControlador(this);
         
-        this.dispositivo = d;
+        setTitulo("debe logearse");
         
-        this.controlador = new ClienteControlador(this.cliente, this);
+        inicializar();
         
+    }
+    
+    private void inicializar() {
         poblarCategoria();
+        actualizarCostos(0);
     }
 
     /**
@@ -56,7 +61,6 @@ public class Clientes extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         tblPedidos = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
-        lbldinero = new javax.swing.JLabel();
         lblMontoTotal2 = new javax.swing.JLabel();
         panelMensajes = new javax.swing.JPanel();
         lblError = new javax.swing.JLabel();
@@ -124,8 +128,6 @@ public class Clientes extends javax.swing.JFrame {
 
         jLabel6.setText("Monto Total:");
 
-        lbldinero.setText("$");
-
         lblMontoTotal2.setText("jLabel7");
 
         javax.swing.GroupLayout panelPedidosLayout = new javax.swing.GroupLayout(panelPedidos);
@@ -145,10 +147,8 @@ public class Clientes extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbldinero)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblMontoTotal2)
-                        .addGap(8, 8, 8)))
+                        .addGap(20, 20, 20)))
                 .addContainerGap())
         );
         panelPedidosLayout.setVerticalGroup(
@@ -163,7 +163,6 @@ public class Clientes extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(lbldinero)
                     .addComponent(lblMontoTotal2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -412,19 +411,19 @@ public class Clientes extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        this.controlador.agregarPedido(this.dispositivo, (Item)jListItems.getSelectedValue(), txtComentario.getText());
+        this.controlador.agregarPedido((Item)jListItems.getSelectedValue(), txtComentario.getText());
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        this.controlador.eliminarPedido(this.dispositivo, tblPedidos.getSelectedRow());
+        this.controlador.eliminarPedido(tblPedidos.getSelectedRow());
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        this.controlador.confirmarServicio(this.dispositivo);
+        this.controlador.confirmarServicio();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        this.controlador.finalizarServicio(this.dispositivo);
+        this.controlador.finalizarServicio();
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void poblarCategoria() {
@@ -433,17 +432,7 @@ public class Clientes extends javax.swing.JFrame {
     
     private void jListCategoriasValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCategoriasValueChanged
         Categoria c = (Categoria) jListCategorias.getSelectedValue();
-        jListItems.setListData(c.getItems().toArray());
-        
-        /*
-        DefaultListModel<Item> modeloCategorias = new DefaultListModel<>();
-        for (Item i : c.getItems()) {
-            modeloCategorias.addElement(i);
-        }
-
-        jListItems.setModel(modeloCategorias);
-        */
-        
+        jListItems.setListData(this.controlador.obtenerItemsDeCategoria(c).toArray());
     }//GEN-LAST:event_jListCategoriasValueChanged
 
     
@@ -471,7 +460,6 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblMontoTotal2;
-    private javax.swing.JLabel lbldinero;
     private javax.swing.JPanel panelIdentificarse;
     private javax.swing.JPanel panelMensajes;
     private javax.swing.JPanel panelMenu;
@@ -485,23 +473,12 @@ public class Clientes extends javax.swing.JFrame {
     private void login() {
         String usr = txtUser.getText();
         String pwd = new String(txtPass.getPassword());
-
-        Object obj = this.controlador.loginCliente(usr, pwd, 0);
-        if(obj == null){
-            JOptionPane.showMessageDialog(this, "Usuario y/o contraseña inválidos", "Ingreso a la aplicación", JOptionPane.ERROR_MESSAGE);
-        } else {
-            this.cliente = (Cliente) obj;
-            actualizarTitulo(this.cliente);
-            this.dispositivo.setCliente(cliente);
-            this.controlador.setCliente(cliente);
-            
-            mensaje("Bienvenido ", this.cliente.getNombreCompleto());
-        }
+        
+        this.controlador.loginCliente(usr, pwd, 0);
     }
 
-    private void actualizarTitulo(Cliente c) {
-        if(c == null) setTitle("Procesar Pedidos - debe logearse");
-        else setTitle("Procesar Pedidos - " + c.getNombreCompleto());
+    private void setTitulo(String nombre) {
+        setTitle("Procesar Pedidos - " + nombre);
     }
 
     public void mensaje(String ex, String msg) {
@@ -510,6 +487,32 @@ public class Clientes extends javax.swing.JFrame {
 
     public void mensaje(String ex){
         lblError.setText(ex);
+    }
+
+    public void mostrarPedidos(ArrayList<Pedido> pedidos) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new Object[] { "Item", "Comentario", "Estado", "Unidad", "Gestor", "Precio" });
+        //double montoTotal = 0;
+        
+        for (Pedido p : pedidos) {
+            modelo.addRow(new Object[] {
+                p.getItem(),
+                p.getComentario(),
+                p.getComentario(),
+                p.getUnidad(),
+                p.getGestor(),
+                p.getPrecio()
+            });
+            
+            //montoTotal += p.getPrecio();
+        }
+
+        //this.actualizarCostos(montoTotal);
+        tblPedidos.setModel(modelo);
+    }
+
+    public void actualizarCostos(double costo) {
+        lblMontoTotal2.setText("$" + costo);
     }
     
 }

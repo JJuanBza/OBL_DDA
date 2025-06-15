@@ -34,4 +34,9 @@ public class Gestor extends Usuario{
     public String getNombreUnidad(){
         return this.unidad.getUnidad();
     }
+    
+    @Override
+    public String toString() {
+        return this.getNombreCompleto();
+    }
 }

@@ -28,6 +28,7 @@ public class OBL_DDA {
         Unidad ChefPastelero = new Unidad("Pâtissier");
         
         fachada.agregarCliente("a", "a", "Juan Barboza");
+        fachada.agregarCliente("b", "b", "Valtasar Blum");
         fachada.agregarGestor("w", "w", "William", ChefPastelero);
         
         
@@ -36,7 +37,7 @@ public class OBL_DDA {
         
         Insumo arroz = new Insumo("Arroz", 2, 20);
         Insumo leche = new Insumo("Leche", 5, 15);
-        Insumo azucar = new Insumo("Azucar", 1, 17);
+        Insumo azucar = new Insumo("Azucar", 1, 1);
         Insumo canela = new Insumo("Canela", 10, 100);
         
         Ingrediente arrozIng = new Ingrediente(arroz, 0.200);

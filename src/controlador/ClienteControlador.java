@@ -6,43 +6,79 @@ package controlador;
 
 import dominio.Categoria;
 import dominio.Dispositivo;
+import dominio.EstadosSistema;
 import dominio.Item;
+import dominio.observer.Observable;
 import dominio.observer.Observador;
 import dominio.user.Cliente;
+import excepciones.IdentificacionException;
+import excepciones.PedidoClienteException;
 import excepciones.UsuarioNULOException;
+import excepciones.ValidacionMultipleException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import servicio.Fachada;
-import vista.Clientes;
+import vista.VistaClientes;
 
 /**
  *
  * @author Emiliano Barcosta
  */
-public class ClienteControlador extends Observador{
+public class ClienteControlador implements Observador{
     
     private Cliente cliente;
-    private Clientes vista;
+    private Dispositivo dispositivo;
+    
+    private VistaClientes vista;
     
     
-    public ClienteControlador(Cliente c, Clientes vista){
-        this.cliente = c;
+    public ClienteControlador(VistaClientes vista){
+        this.cliente = null;
+        this.dispositivo = new Dispositivo();
         this.vista = vista;
     }
     
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+        this.vincularDispositivo();
+        
+        this.dispositivo.asociarObservadorController(this);
     }
     
-    public Cliente loginCliente(String numero, String password, int idDispositivo){
-        return Fachada.getInstancia().loginCliente(numero, password, idDispositivo);
+    private void vincularDispositivo(){
+        this.dispositivo.setCliente(cliente);
+    }
+    
+    public void loginCliente(String numero, String password, int idDispositivo){
+        try{
+            this.dispositivo.tengoCliente();
+            
+            Cliente c = Fachada.getInstancia().loginCliente(numero, password, idDispositivo);
+            c.isLogged();
+            
+            this.setCliente(c);
+            c.logIN();
+            
+            vista.mensaje("Bienvenido ", c.getNombreCompleto());
+            
+        }catch(IdentificacionException ex){
+            vista.mensaje(ex.getMessage());
+        }
+    }
+    
+    private void mostrarPedidos(){
+        vista.mostrarPedidos(this.dispositivo.getPedidos());
+    }
+    
+    private void actualizarCostoTotal() {
+        vista.actualizarCostos(this.dispositivo.getCostos());
     }
 
-    public void agregarPedido(Dispositivo dispositivo, Item item, String comentario) {
+    public void agregarPedido(Item item, String comentario) {
         try{
-            System.out.println(cliente == null);
             validarCliente();
             validarItem(item);
-            dispositivo.agregarPedido(item, comentario);
+            this.dispositivo.agregarPedido(item, comentario);
             
             vista.mensaje("Pedido agregado con Exito");
         }catch(UsuarioNULOException ex){
@@ -52,10 +88,12 @@ public class ClienteControlador extends Observador{
         }
     }
     
-    public void eliminarPedido(Dispositivo dispositivo, int indice) {
+    public void eliminarPedido(int indice) {
         try{
             validarCliente();
             validarIndice(indice);
+            
+            this.dispositivo.eliminarPedido(indice);
             
             vista.mensaje("Pedido eliminado con Exito");
         }catch(UsuarioNULOException ex){
@@ -65,25 +103,43 @@ public class ClienteControlador extends Observador{
         }
     }
     
-    public void confirmarServicio(Dispositivo dispositivo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void confirmarServicio() {        
+        try{
+            LocalDateTime fecha = LocalDateTime.now();
+            
+            this.dispositivo.confirmar(fecha);
+            
+            vista.mensaje("Servicio Confirmado");
+        }catch(PedidoClienteException | ValidacionMultipleException ex){
+            vista.mensaje(ex.getMessage());
+        }
     }
-
-    public void finalizarServicio(Dispositivo dispositivo) {
+    
+    public void finalizarServicio() {
         try{
             validarCliente();
-            validarPedidos(dispositivo);
+            validarPedidos();
             
             
         }catch(UsuarioNULOException ex){
             vista.mensaje(ex.getMessage(), "Finalizar Servicio");
-        }catch(Exception ex){
+        }catch(PedidoClienteException ex){
             vista.mensaje(ex.getMessage());
         }
     }
 
     public ArrayList<Categoria> obtenerCategorias() {
         return Fachada.getInstancia().getCategorias();
+    }
+    
+    public ArrayList<Item> obtenerItemsDeCategoria(Categoria c){
+        ArrayList<Item> lista = c.obtenerItems();
+        
+        if(lista.isEmpty()){
+            vista.mensaje("Lo sentimos. No contamos con stock disponible para esta categoria");
+        }
+        
+        return lista;
     }
 
     private void validarCliente() throws UsuarioNULOException {
@@ -98,9 +154,17 @@ public class ClienteControlador extends Observador{
         if(i == null) throw new Exception("Debe seleccionar un Item");
     }
 
-    private void validarPedidos(Dispositivo dispositivo) throws Exception{
-        //existen pedidos en el dispositivo
-        if(!dispositivo.validarPedidos()) throw new Exception("No hay pedidos nuevos");
+    private void validarPedidos() throws PedidoClienteException{
+        this.dispositivo.validarPedidos();
     }
 
+    @Override
+    public void actualizar(Observable origen, Object evento) {
+        if(EstadosSistema.ALTA_PEDIDO.equals(evento) || EstadosSistema.BAJA_PEDIDO.equals(evento)){
+            //traer los pedidos
+            this.mostrarPedidos();
+            //actualizar el monto total
+            this.actualizarCostoTotal();
+        }
+    }
 }

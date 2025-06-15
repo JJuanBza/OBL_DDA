@@ -119,14 +119,7 @@ public class loginGestor extends javax.swing.JFrame {
         String usr = txtUser.getText();
         String pwd = new String(txtPass.getPassword());
 
-        Object obj = this.control.loginGestor(usr, pwd);
-        if(obj == null){
-            JOptionPane.showMessageDialog(this, "Usuario y/o contraseña inválidos", "Ingreso a la aplicación", JOptionPane.ERROR_MESSAGE);
-        } else {
-            dominio.user.Gestor gestor = (dominio.user.Gestor) obj;
-            new Gestores(gestor).setVisible(true);
-            this.dispose(); // Cierra la ventana de login si querés
-        }
+        
     }
 
 

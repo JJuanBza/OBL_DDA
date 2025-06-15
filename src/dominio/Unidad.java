@@ -1,9 +1,10 @@
 package dominio;
 
+import dominio.observer.Observable;
 import dominio.user.Gestor;
 import java.util.ArrayList;
 
-public class Unidad {
+public class Unidad extends Observable{
 
 	private String nombre;
 
@@ -37,5 +38,10 @@ public class Unidad {
 	public void eliminarPedido(Pedido p) {
 
 	}
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 
 }

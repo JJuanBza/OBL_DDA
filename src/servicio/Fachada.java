@@ -1,10 +1,12 @@
 package servicio;
 
 import dominio.Categoria;
+import dominio.Item;
 import dominio.user.Cliente;
 import dominio.user.Gestor;
 import dominio.Pedido;
 import dominio.Unidad;
+import excepciones.IdentificacionException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,8 +15,6 @@ public class Fachada {
     private static Fachada instancia = new Fachada();
 
     private ServicioUsuario servicioUsuario = new ServicioUsuario();
-
-    private ServicioGestor servicioGestor;
 
     private ServicioDispositivo servicioDispositivo = new ServicioDispositivo();
 
@@ -27,11 +27,11 @@ public class Fachada {
             return 0;
     }
 
-    public Cliente loginCliente(String numero, String password, int idDispositivo) {
+    public Cliente loginCliente(String numero, String password, int idDispositivo) throws IdentificacionException {
         return this.servicioUsuario.loginCliente(numero, password);
     }
 
-    public Gestor loginGestor(String usuario, String password) {
+    public Gestor loginGestor(String usuario, String password) throws IdentificacionException {
         return this.servicioUsuario.loginGestor(usuario, password);
     }
 
@@ -66,4 +66,5 @@ public class Fachada {
     public void agregarCategoria(Categoria c) {
         this.servicioDispositivo.agregarCategoria(c);
     }
+
 }

@@ -2,6 +2,7 @@ package servicio;
 
 import dominio.Dispositivo;
 import dominio.Categoria;
+import dominio.Item;
 import dominio.Pedido;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,5 +57,10 @@ public class ServicioDispositivo {
     void agregarCategoria(Categoria c) {
         this.categorias.add(c);
     }
+
+    ArrayList<Item> obtenerItemsDe(Categoria c) {
+        return  c.obtenerItems();
+    }
+
 
 }

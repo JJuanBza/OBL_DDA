@@ -5,6 +5,8 @@
 package dominio.estadoPedido;
 
 import dominio.Pedido;
+import dominio.Pedido.Estados;
+import excepciones.PedidoClienteException;
 
 /**
  *
@@ -13,22 +15,28 @@ import dominio.Pedido;
 public class EnProceso extends Estado {
 
     public EnProceso(Pedido p) {
-        super(p);
+        super(p, Estados.EN_PROCESO);
     }
 
     @Override
-    public void eliminar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void confirmar() throws PedidoClienteException{
+        throw new PedidoClienteException("El pedido ya fue confirmado");
     }
 
     @Override
-    public void confirmado() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void procesar() throws PedidoClienteException{
+        throw new PedidoClienteException("El pedido está en proceso!");
     }
 
     @Override
-    public void cobrar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void finalizar() throws PedidoClienteException{
+        this.getPedido().cambiarEstado(new Finalizado(this.getPedido()));
     }
+
+    @Override
+    public void entregar() throws PedidoClienteException{
+        throw new PedidoClienteException("Debe Finalizar primero");
+    }
+
     
 }
