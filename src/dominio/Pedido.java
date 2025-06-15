@@ -24,6 +24,7 @@ public class Pedido extends Observable{
     public Pedido(Item i, String comentario){
         this.item = i;
         this.comentario = comentario;
+        this.unidad = i.getUnidad();
         this.precio = i.getPrecio();
     }
     
@@ -83,8 +84,8 @@ public class Pedido extends Observable{
     }
 
 
-    public void validarEstado() throws Exception{
-        if(!estado.mismoEstado(Estados.NO_CONFIRMADO) && !estado.mismoEstado(Estados.CONFIRMADO)) throw new Exception("Un poco tarde… Ya estamos elaborando este pedido!");
+    public void validarEstado() throws PedidoClienteException{
+        if(!estado.mismoEstado(Estados.NO_CONFIRMADO) && !estado.mismoEstado(Estados.CONFIRMADO)) throw new PedidoClienteException("Un poco tarde… Ya estamos elaborando este pedido!");
     }
 
     /**

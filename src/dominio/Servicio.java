@@ -66,17 +66,14 @@ public class Servicio extends Observable{
         y quita los pedidos del servicio.
         */
         this.existenPedidos();
-        this.validarStockPedidos();
-        
+        this.validarConfirmarStockPedidos(fecha);
+        avisar(EstadosSistema.CONFIRMADO);
         /*
         Procesa los pedidos del servicio que estén sin procesar de la siguiente forma: 
         []Descuenta el stock de los insumos de todos los ítems de los pedidos, 
         []envía los pedidos a la unidad procesadora correspondiente a cada ítem
         []actualiza los datos del servicio
         */
-        this.confirmarPedidos(fecha);
-        
-        
     }
 
     /**
@@ -88,14 +85,19 @@ public class Servicio extends Observable{
      * 
      * }
      */
-    public void eliminarPedido(int indicePedido) throws Exception{
+    public void eliminarPedido(int indicePedido) throws PedidoClienteException{
         Pedido p = this.pedidos.get(indicePedido);
+        this.eliminarPedido(p);
+    }
+    
+    private void eliminarPedido(Pedido p) throws PedidoClienteException{
         p.validarEstado();
         this.pedidos.remove(p);
         this.montoTotal -= p.getPrecio();
         
         avisar(EstadosSistema.BAJA_PEDIDO);
     }
+    
 
     public void agregarPedido(Item item, String comentario) {
         Pedido p = new Pedido(item, comentario);
@@ -137,26 +139,31 @@ public class Servicio extends Observable{
     }
     
    
-    private void validarStockPedidos() throws PedidoClienteException{
-        
+    private void validarConfirmarStockPedidos(LocalDateTime fecha) throws PedidoClienteException{
+        ArrayList<Pedido> pedidosInvalidos = new ArrayList<>();
         StringBuilder error = new StringBuilder();
-        
+
         for (Pedido pedido : this.getPedidos()) {
-            try{
+            try {
                 pedido.validarDisponibilidad();
-            }catch(PedidoClienteException ex){
-                error.append(ex.getMessage());
-                this.pedidos.remove(pedido);
+                pedido.confirmar(fecha);
+            } catch (PedidoClienteException ex) {
+                error.append(ex.getMessage()).append("\n");
+                pedidosInvalidos.add(pedido);
             }
         }
+
+        for(Pedido p : pedidosInvalidos){
+            this.eliminarPedido(p);
+        }
         
-        if(error.isEmpty()) throw new PedidoClienteException(error.toString());
+        this.getPedidos().removeAll(pedidosInvalidos);
+
+        if (!error.isEmpty()) {
+            throw new PedidoClienteException(error.toString());
+        }
+
     }
 
-    private void confirmarPedidos(LocalDateTime fecha) throws PedidoClienteException {
-        for(Pedido p : this.getPedidos()){
-            p.confirmar(fecha);
-        }
-    }
 
 }

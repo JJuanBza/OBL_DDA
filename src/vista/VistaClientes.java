@@ -492,7 +492,6 @@ public class VistaClientes extends javax.swing.JFrame {
     public void mostrarPedidos(ArrayList<Pedido> pedidos) {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.setColumnIdentifiers(new Object[] { "Item", "Comentario", "Estado", "Unidad", "Gestor", "Precio" });
-        //double montoTotal = 0;
         
         for (Pedido p : pedidos) {
             modelo.addRow(new Object[] {
@@ -503,11 +502,8 @@ public class VistaClientes extends javax.swing.JFrame {
                 p.getGestor(),
                 p.getPrecio()
             });
-            
-            //montoTotal += p.getPrecio();
         }
 
-        //this.actualizarCostos(montoTotal);
         tblPedidos.setModel(modelo);
     }
 

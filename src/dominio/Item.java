@@ -64,9 +64,7 @@ public class Item {
     
     public void descontarStock(){
         for(Ingrediente ing : this.ingredientes){
-            System.out.println(ing);
             ing.descontarStock();
-            System.out.println(ing);
         }
     }
 

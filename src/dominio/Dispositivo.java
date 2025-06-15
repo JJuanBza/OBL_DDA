@@ -38,7 +38,7 @@ public class Dispositivo implements Observador{
         if(this.cliente != null) throw new IdentificacionException("Debe primero finalizar el servicio actual");
     }
 
-    public void confirmar(LocalDateTime fecha) throws PedidoClienteException, ValidacionMultipleException{
+    public void confirmar(LocalDateTime fecha) throws PedidoClienteException{
         this.servicio.confirmar(fecha);
     }
 

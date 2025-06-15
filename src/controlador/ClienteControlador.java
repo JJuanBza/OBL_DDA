@@ -8,6 +8,7 @@ import dominio.Categoria;
 import dominio.Dispositivo;
 import dominio.EstadosSistema;
 import dominio.Item;
+import dominio.Pedido;
 import dominio.observer.Observable;
 import dominio.observer.Observador;
 import dominio.user.Cliente;
@@ -105,13 +106,16 @@ public class ClienteControlador implements Observador{
     
     public void confirmarServicio() {        
         try{
-            LocalDateTime fecha = LocalDateTime.now();
+            validarCliente();
             
+            LocalDateTime fecha = LocalDateTime.now();
             this.dispositivo.confirmar(fecha);
             
             vista.mensaje("Servicio Confirmado");
-        }catch(PedidoClienteException | ValidacionMultipleException ex){
+        }catch(PedidoClienteException ex){
             vista.mensaje(ex.getMessage());
+        }catch(UsuarioNULOException ex){
+            vista.mensaje(ex.getMessage(), "Confirmar el Pedido");
         }
     }
     
@@ -160,11 +164,17 @@ public class ClienteControlador implements Observador{
 
     @Override
     public void actualizar(Observable origen, Object evento) {
+        /*
         if(EstadosSistema.ALTA_PEDIDO.equals(evento) || EstadosSistema.BAJA_PEDIDO.equals(evento)){
             //traer los pedidos
             this.mostrarPedidos();
             //actualizar el monto total
             this.actualizarCostoTotal();
         }
+*/
+        //traer los pedidos
+        this.mostrarPedidos();
+        //actualizar el monto total
+        this.actualizarCostoTotal();
     }
 }
