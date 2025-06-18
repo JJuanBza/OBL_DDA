@@ -30,4 +30,9 @@ public class Confirmado extends Estado {
         throw new UnsupportedOperationException("Debe finalizar el pedido primero!"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
+    public String quienSoy() {
+        return "Confirmado";
+    }
+    
 }

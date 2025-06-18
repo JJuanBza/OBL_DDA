@@ -3,7 +3,6 @@ package dominio;
 import dominio.observer.Observable;
 import dominio.user.Cliente;
 import excepciones.PedidoClienteException;
-import excepciones.ValidacionMultipleException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -12,6 +11,7 @@ public class Servicio extends Observable{
     private Cliente cliente;
     private ArrayList<Pedido> pedidos;
     private float montoTotal;
+    private float montoFinal;
     private float montoBeneficio;
     
     
@@ -41,52 +41,24 @@ public class Servicio extends Observable{
     public float getMontoTotal() {
         return montoTotal;
     }
+    
+    public float getMontoFinal(){
+        return this.montoFinal;
+    }
 
     public float getMontoBeneficio() {
         return montoBeneficio;
     }
 
 
-    /**
-     * foreach(Pedido p in this.pedidos){
-     * try{
-     * p.validarDisponibilidad();
-     * p.agregarPedido();
-     * }catch(){
-     * 
-     * }
-     * }
-     */
     public void confirmar(LocalDateTime fecha) throws PedidoClienteException{
-        /*
-        [/]Si no hay pedidos para procesar muestra mensaje “No hay pedidos nuevos”.
-        [/]Si no hay stock suficiente en alguno(s) de los pedido(s): 
-            Para cada pedido sin stock muestra: 
-        “Nos hemos quedado sin stock de “ + nombre del ítem + “ y no pudimos avisarte antes!” 
-        y quita los pedidos del servicio.
-        */
-        this.existenPedidos();
-        this.validarConfirmarStockPedidos(fecha);
+        this.validarConfirmarStockPedidos(fecha, this.existenPedidos());
         avisar(EstadosSistema.CONFIRMADO);
-        /*
-        Procesa los pedidos del servicio que estén sin procesar de la siguiente forma: 
-        []Descuenta el stock de los insumos de todos los ítems de los pedidos, 
-        []envía los pedidos a la unidad procesadora correspondiente a cada ítem
-        []actualiza los datos del servicio
-        */
     }
 
-    /**
-     * try{
-     * p.validarEstado();
-     * p.eliminar();
-     * this.pedidos.eliminar(p);
-     * }catch(){
-     * 
-     * }
-     */
     public void eliminarPedido(int indicePedido) throws PedidoClienteException{
         Pedido p = this.pedidos.get(indicePedido);
+        
         this.eliminarPedido(p);
     }
     
@@ -98,10 +70,20 @@ public class Servicio extends Observable{
         avisar(EstadosSistema.BAJA_PEDIDO);
     }
     
+    private void eliminarPedidosAlfinal(ArrayList<Pedido> pedidos){
+        for(Pedido p : pedidos){
+            this.pedidos.remove(p);
+            this.montoTotal -= p.getPrecio();
+        }
+        
+        avisar(EstadosSistema.BAJA_PEDIDO);
+    }
+    
 
-    public void agregarPedido(Item item, String comentario) {
+    public void agregarPedido(Item item, String comentario) throws PedidoClienteException {
         Pedido p = new Pedido(item, comentario);
         
+        p.validarDisponibilidad();
         this.pedidos.add(p);
         this.montoTotal += p.getPrecio();
         
@@ -110,59 +92,87 @@ public class Servicio extends Observable{
 
     public void pagarServicio(){
         //caclular beneficio
-        //float beneficio = cliente.calcularMontoBeneficio();
-
-        //this.montoBeneficio = beneficio;
-        this.montoTotal -= this.montoBeneficio;
+        float beneficio = cliente.getTipoCliente().calcularMontoConBeneficios(this);
+        
+        this.montoBeneficio = beneficio;
+        this.montoFinal = this.montoTotal;
+        this.montoFinal -= this.montoBeneficio;
+        
+        avisar(EstadosSistema.FINALIZADO);
     }
 
     public int obtenerTotalIncidencias(Item i) {
         int total = 0;
         for(Pedido p : this.getPedidos()){
-            if(p.equals(new Pedido(i))) total++;
+            if(p.tengoItem(i)) total++;
         }
 
         return total;
     }
 
     
-    public void existenPedidos() throws PedidoClienteException{
-        if(this.todosConfirmados()) throw new PedidoClienteException("No hay pedidos nuevos");
-    }
-    
-    private boolean todosConfirmados(){
+    public ArrayList<Pedido> existenPedidos() throws PedidoClienteException{
+        
+        ArrayList<Pedido> nuevos = new ArrayList();
+        
         for(Pedido p : this.getPedidos()){
-            if(!p.estoyConfirmado()) return false;
+            boolean b = p.estoyConfirmado();
+            if(!b) nuevos.add(p);
         }
         
-        return true;
+        if(nuevos.isEmpty()) throw new PedidoClienteException("No hay pedidos nuevos");
+        
+        return nuevos;
     }
+
     
    
-    private void validarConfirmarStockPedidos(LocalDateTime fecha) throws PedidoClienteException{
+    private void validarConfirmarStockPedidos(LocalDateTime fecha, ArrayList<Pedido> pedidosNuevos) throws PedidoClienteException{
         ArrayList<Pedido> pedidosInvalidos = new ArrayList<>();
-        StringBuilder error = new StringBuilder();
+        String error = new String();
 
-        for (Pedido pedido : this.getPedidos()) {
+        for (Pedido pedido : pedidosNuevos) {
             try {
                 pedido.validarDisponibilidad();
                 pedido.confirmar(fecha);
             } catch (PedidoClienteException ex) {
-                error.append(ex.getMessage()).append("\n");
+                error = error + ex.getMessage();
                 pedidosInvalidos.add(pedido);
             }
         }
 
-        for(Pedido p : pedidosInvalidos){
-            this.eliminarPedido(p);
+        this.eliminarPedidosAlfinal(pedidosInvalidos);
+        
+        if (!error.isEmpty()) {
+            throw new PedidoClienteException(error);
+        }
+    }
+
+    void pedidosConfirmados() throws PedidoClienteException{
+        for(Pedido p : this.getPedidos()){
+            if(!p.estoyConfirmado()) throw new PedidoClienteException("Tiene pedidos sin Confirmar!");
+        }
+    }
+
+    String pedidosNoEntregados() {
+        int cont = 0;
+        for(Pedido p : this.getPedidos()){
+            if(!p.estoyEntregado()) cont++;
         }
         
-        this.getPedidos().removeAll(pedidosInvalidos);
+        return "¡Tienes " + cont + " pedidos en proceso, recuerda ir a retirarlos!";
+    }
 
-        if (!error.isEmpty()) {
-            throw new PedidoClienteException(error.toString());
-        }
+    String obtenerBeneficioAplicado() {
+        return this.cliente.getTipoCliente().getNombreBeneficios();
+    }
 
+    float getFinal() {
+        return this.montoFinal;
+    }
+
+    boolean hayPedidos(){
+        return !this.pedidos.isEmpty();
     }
 
 

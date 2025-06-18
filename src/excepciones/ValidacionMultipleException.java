@@ -31,9 +31,5 @@ public class ValidacionMultipleException extends Exception {
         this.errores.add(error);
     }
 
-    @Override
-    public String getMessage() {
-        return String.join("\n", errores);
-    }
 }
 

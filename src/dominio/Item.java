@@ -4,17 +4,13 @@ import excepciones.PedidoClienteException;
 import java.util.ArrayList;
 
 public class Item {
-
+    
     private String nombre;
-
     private float precio;
-
     private ArrayList<Ingrediente> ingredientes;
     private boolean disponible;
     
-
     private Unidad unidadProcesadora;
-
     private Categoria categoria;
 
 
@@ -58,13 +54,19 @@ public class Item {
      */
     public void validarDisponibilidad() throws PedidoClienteException {        
         for(Ingrediente ingrediente : this.ingredientes){
-            if(!ingrediente.puedoHacerme()) throw new PedidoClienteException("Nos hemos quedado sin stock de " + this.nombre + " y no pudimos avisarte antes!");
+            if(!ingrediente.puedoHacerme()) throw new PedidoClienteException("Nos hemos quedado sin stock de " + this.nombre + " y no pudimos avisarte antes! \n");
         }
     }
     
     public void descontarStock(){
         for(Ingrediente ing : this.ingredientes){
             ing.descontarStock();
+        }
+    }
+    
+    public void reintegrarStock(){
+        for(Ingrediente ing : this.ingredientes){
+            ing.reintegrarStock();
         }
     }
 
@@ -82,4 +84,16 @@ public class Item {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+
+    
 }

@@ -2,24 +2,32 @@ package dominio.beneficios;
 
 import dominio.Servicio;
 
-public class Descuento implements Beneficio{
+public class Descuento extends Beneficio{
 
     float montoASuperar;
-    float porcentajeDescuento;
+    double porcentajeDescuento;
     
-    public Descuento(float m, float p){
+    boolean aplicado;
+    
+    public Descuento(float m, double p){
         this.montoASuperar = m;
         this.porcentajeDescuento = p;
     }
+    
+    public boolean fuiAplicado(){ return this.aplicado;}
 
     @Override
     public String descripcion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return "Obtuvo un %" + Math.round(porcentajeDescuento * 100) + " por superar los $" + montoASuperar;
     }
 
     @Override
-    public float calcular(Servicio s) {
-        if(s.getMontoTotal() > this.montoASuperar) return s.getMontoTotal() * this.porcentajeDescuento; //para %5 pD = 0,05
+    public double calcular(Servicio s) {
+        if(s.getMontoTotal() >= this.montoASuperar){
+            this.aplicado = true;
+            return s.getMontoTotal() * this.porcentajeDescuento; //para %5 pD = 0,05
+        }
+            
         return 0;
     }
 

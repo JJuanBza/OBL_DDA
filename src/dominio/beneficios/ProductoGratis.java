@@ -3,9 +3,11 @@ package dominio.beneficios;
 import dominio.Item;
 import dominio.Servicio;
 
-public class ProductoGratis implements Beneficio {
+public class ProductoGratis extends Beneficio {
 
     private Item producto;
+    
+    boolean aplicado;
 
     public ProductoGratis(Item i){
         this.producto = i;
@@ -13,12 +15,24 @@ public class ProductoGratis implements Beneficio {
 
     @Override
     public String descripcion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.producto.getNombre() + " invitación!";
     }
 
     @Override
-    public float calcular(Servicio s) {
-        return this.producto.getPrecio() * s.obtenerTotalIncidencias(this.producto);
+    public double calcular(Servicio s) {
+        int total = s.obtenerTotalIncidencias(this.producto);
+        
+        if(total > 0){
+            this.aplicado = true;
+            return this.producto.getPrecio() * total;
+        }
+        
+        return total;
+    }
+
+    @Override
+    public boolean fuiAplicado() {
+        return aplicado;
     }
 
 }

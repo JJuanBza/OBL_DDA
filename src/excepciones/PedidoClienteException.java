@@ -12,5 +12,4 @@ public class PedidoClienteException extends PedidoException{
     public PedidoClienteException(String message) {
         super(message);
     }
-    
 }

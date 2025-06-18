@@ -12,7 +12,7 @@ public abstract class Estado {
 
     public Estado(Pedido p, Estados e){ 
         this.pedido = p;
-        this.estado = e.NO_CONFIRMADO;
+        this.estado = e;
     }
     public Pedido getPedido(){ return this.pedido;}
 
@@ -20,6 +20,7 @@ public abstract class Estado {
     public abstract void procesar() throws PedidoClienteException;
     public abstract void finalizar() throws PedidoClienteException;
     public abstract void entregar() throws PedidoClienteException;
+    public abstract String quienSoy();
 
     @Override
     public int hashCode() {

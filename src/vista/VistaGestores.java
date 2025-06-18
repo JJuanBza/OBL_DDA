@@ -34,26 +34,55 @@ public class VistaGestores extends javax.swing.JFrame {
 
         jSeparator1 = new javax.swing.JSeparator();
         pnlVisor = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTablePedidos = new javax.swing.JTable();
         btnTomar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jListPedidos = new javax.swing.JList();
         btnEntregar = new javax.swing.JButton();
         btnFinalizar = new javax.swing.JButton();
         lblName = new javax.swing.JLabel();
-        spLista = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jTablePedidos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTablePedidos);
+
+        btnTomar.setText("Tomar Pedido");
+
+        jScrollPane2.setViewportView(jListPedidos);
 
         javax.swing.GroupLayout pnlVisorLayout = new javax.swing.GroupLayout(pnlVisor);
         pnlVisor.setLayout(pnlVisorLayout);
         pnlVisorLayout.setHorizontalGroup(
             pnlVisorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 779, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlVisorLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnTomar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         pnlVisorLayout.setVerticalGroup(
             pnlVisorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlVisorLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addComponent(btnTomar)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-
-        btnTomar.setText("Tomar Pedido");
 
         btnEntregar.setText("Entregar Pedido");
 
@@ -77,13 +106,9 @@ public class VistaGestores extends javax.swing.JFrame {
                             .addComponent(lblName)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnFinalizar)
-                                .addGap(27, 27, 27)
-                                .addComponent(btnEntregar))
-                            .addComponent(spLista, javax.swing.GroupLayout.PREFERRED_SIZE, 768, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnTomar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btnFinalizar)
+                        .addGap(27, 27, 27)
+                        .addComponent(btnEntregar)))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -95,10 +120,6 @@ public class VistaGestores extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnlVisor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnTomar)
-                .addGap(28, 28, 28)
-                .addComponent(spLista, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEntregar)
@@ -115,9 +136,12 @@ public class VistaGestores extends javax.swing.JFrame {
     private javax.swing.JButton btnEntregar;
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnTomar;
+    private javax.swing.JList jListPedidos;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTablePedidos;
     private javax.swing.JLabel lblName;
     private javax.swing.JPanel pnlVisor;
-    private javax.swing.JScrollPane spLista;
     // End of variables declaration//GEN-END:variables
 }

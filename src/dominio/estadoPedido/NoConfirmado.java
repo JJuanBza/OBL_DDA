@@ -30,4 +30,9 @@ public class NoConfirmado extends Estado {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
+    public String quienSoy() {
+        return "No Confirmado";
+    }
+    
 }

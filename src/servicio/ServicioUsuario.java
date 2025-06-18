@@ -4,6 +4,7 @@ import dominio.Unidad;
 import dominio.user.Cliente;
 import dominio.user.Usuario;
 import dominio.user.Gestor;
+import dominio.user.TipoCliente;
 import excepciones.IdentificacionException;
 import java.util.ArrayList;
 
@@ -45,8 +46,8 @@ public class ServicioUsuario {
     }
    
     
-    public void agregarCliente(String user, String pass, String nomCompleto){
-        this.clientes.add(new Cliente(user, pass, nomCompleto));
+    public void agregarCliente(String user, String pass, String nomCompleto, TipoCliente tipocliente){
+        this.clientes.add(new Cliente(user, pass, nomCompleto, tipocliente));
     }
     
     public void agregarGestor(String user, String pass, String nomCompleto, Unidad u){

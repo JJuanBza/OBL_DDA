@@ -6,9 +6,9 @@ import dominio.observer.Observador;
 import dominio.user.Cliente;
 import excepciones.IdentificacionException;
 import excepciones.PedidoClienteException;
-import excepciones.ValidacionMultipleException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class Dispositivo implements Observador{
@@ -29,6 +29,14 @@ public class Dispositivo implements Observador{
         this.cliente = c;
         this.servicio.setCliente(c);
     }
+    public void desvincular() {
+        this.cliente.LogOUT();
+        this.setCliente(null);
+        this.setServicio(new Servicio());
+        
+    }
+    
+    
     public void setServicio(Servicio s){ this.servicio = s;}
 
     public Cliente getCliente(){ return this.cliente;}
@@ -42,7 +50,7 @@ public class Dispositivo implements Observador{
         this.servicio.confirmar(fecha);
     }
 
-    public void agregarPedido(Item i, String comentario) {
+    public void agregarPedido(Item i, String comentario) throws PedidoClienteException {
         this.servicio.agregarPedido(i, comentario);
     }
 
@@ -55,6 +63,7 @@ public class Dispositivo implements Observador{
     }
     
     public float getCostos(){ return this.servicio.getMontoTotal();}
+    
 
     
     public void validarPedidos() throws PedidoClienteException{
@@ -72,6 +81,32 @@ public class Dispositivo implements Observador{
         return hash;
     }
 
+    public void asociarObservadorController(ClienteControlador controlador) {
+        this.servicio.agregarObservador(controlador);
+    }
+
+    public void finalizar() {
+        this.servicio.pagarServicio();
+    }
+
+    public void pedidosConfirmados() throws PedidoClienteException {
+        this.servicio.pedidosConfirmados();
+    }
+
+    public String pedidosNoEntregados() {
+        return this.servicio.pedidosNoEntregados();
+    }
+
+    public String beneficioAplicado() {
+        return this.servicio.obtenerBeneficioAplicado();
+    }
+
+    public float getFinal() {
+        return this.servicio.getFinal();
+    }
+
+
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -87,8 +122,7 @@ public class Dispositivo implements Observador{
         return Objects.equals(this.servicio, other.servicio);
     }
 
-    public void asociarObservadorController(ClienteControlador controlador) {
-        this.servicio.agregarObservador(controlador);
+    public boolean hayPedidos() {
+        return this.servicio.hayPedidos();
     }
-
 }

@@ -30,6 +30,11 @@ public class Finalizado extends Estado {
         this.getPedido().cambiarEstado(new Entregado(this.getPedido()));
     }
 
+    @Override
+    public String quienSoy() {
+        return "Finalizado";
+    }
+
 
 
 }

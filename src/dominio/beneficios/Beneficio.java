@@ -9,7 +9,11 @@ import dominio.Servicio;
  *
  * @author 05147
  */
-public interface Beneficio {
-    String descripcion();
-    float calcular(Servicio s);
+public abstract class Beneficio {    
+    
+    private boolean aplicado;
+    
+    public abstract String descripcion();
+    public abstract double calcular(Servicio s);
+    public abstract boolean fuiAplicado();
 }

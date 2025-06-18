@@ -6,6 +6,7 @@ import dominio.user.Cliente;
 import dominio.user.Gestor;
 import dominio.Pedido;
 import dominio.Unidad;
+import dominio.user.TipoCliente;
 import excepciones.IdentificacionException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,8 +52,8 @@ public class Fachada {
 
     }
 
-    public void agregarCliente(String user, String pass, String nomCompleto){
-        this.servicioUsuario.agregarCliente(user, pass, nomCompleto);
+    public void agregarCliente(String user, String pass, String nomCompleto, TipoCliente tipocliente){
+        this.servicioUsuario.agregarCliente(user, pass, nomCompleto, tipocliente);
     }
 
     public void agregarGestor(String user, String pass, String nomCompleto, Unidad u){

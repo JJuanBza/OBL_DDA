@@ -6,12 +6,11 @@ package vista;
 
 import controlador.ClienteControlador;
 import dominio.Categoria;
-import dominio.Dispositivo;
 import dominio.Item;
 import dominio.Pedido;
-import dominio.user.Cliente;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,17 +27,18 @@ public class VistaClientes extends javax.swing.JFrame {
      */
     public VistaClientes() {
         initComponents();
+
         setLocationRelativeTo(null); 
         
         this.controlador = new ClienteControlador(this);
-        
-        setTitulo("debe logearse");
         
         inicializar();
         
     }
     
-    private void inicializar() {
+    public void inicializar() {
+        setTitulo("debe logearse");
+        limpiarVista();
         poblarCategoria();
         actualizarCostos(0);
     }
@@ -52,6 +52,7 @@ public class VistaClientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        textArea1 = new java.awt.TextArea();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
@@ -63,7 +64,8 @@ public class VistaClientes extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         lblMontoTotal2 = new javax.swing.JLabel();
         panelMensajes = new javax.swing.JPanel();
-        lblError = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jListMensajes = new javax.swing.JList<>();
         panelIdentificarse = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -169,23 +171,23 @@ public class VistaClientes extends javax.swing.JFrame {
 
         panelMensajes.setBorder(javax.swing.BorderFactory.createTitledBorder("Mensajes del Sistema"));
 
-        lblError.setText("Mensajes del Sistema...");
+        jScrollPane5.setViewportView(jListMensajes);
 
         javax.swing.GroupLayout panelMensajesLayout = new javax.swing.GroupLayout(panelMensajes);
         panelMensajes.setLayout(panelMensajesLayout);
         panelMensajesLayout.setHorizontalGroup(
             panelMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMensajesLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(lblError)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMensajesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5)
+                .addContainerGap())
         );
         panelMensajesLayout.setVerticalGroup(
             panelMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMensajesLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(lblError)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         panelIdentificarse.setBorder(javax.swing.BorderFactory.createTitledBorder("Identificarse"));
@@ -216,7 +218,7 @@ public class VistaClientes extends javax.swing.JFrame {
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
         panelIdentificarseLayout.setVerticalGroup(
             panelIdentificarseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -321,7 +323,7 @@ public class VistaClientes extends javax.swing.JFrame {
         panelMenuLayout.setHorizontalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMenuLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(30, Short.MAX_VALUE)
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -357,14 +359,17 @@ public class VistaClientes extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelIdentificarse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelMensajes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelMenu, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelPedidos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelMensajes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelPedidos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelMenu, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 21, Short.MAX_VALUE)))
+                .addGap(16, 16, 16))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,7 +382,7 @@ public class VistaClientes extends javax.swing.JFrame {
                 .addComponent(panelPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelMensajes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         jScrollPane4.setViewportView(jPanel1);
@@ -388,7 +393,7 @@ public class VistaClientes extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4))
         );
         layout.setVerticalGroup(
@@ -399,7 +404,7 @@ public class VistaClientes extends javax.swing.JFrame {
                 .addGap(835, 835, 835))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 814, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 836, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -431,12 +436,19 @@ public class VistaClientes extends javax.swing.JFrame {
     }
     
     private void jListCategoriasValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCategoriasValueChanged
+        //Categoria c = (Categoria) jListCategorias.getSelectedValue();
+        //jListItems.setListData(this.controlador.obtenerItemsDeCategoria(c).toArray());
+        
         Categoria c = (Categoria) jListCategorias.getSelectedValue();
-        jListItems.setListData(this.controlador.obtenerItemsDeCategoria(c).toArray());
+        if (c != null) {
+            jListItems.setListData(this.controlador.obtenerItemsDeCategoria(c).toArray());
+        } else {
+            jListItems.setListData(new Object[0]); // o lo que corresponda
+        }
     }//GEN-LAST:event_jListCategoriasValueChanged
 
-    
 
+    private DefaultListModel<String> modeloMensajes;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnConfirmar;
@@ -449,6 +461,7 @@ public class VistaClientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JList jListCategorias;
     private javax.swing.JList jListItems;
+    private javax.swing.JList<String> jListMensajes;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -457,14 +470,15 @@ public class VistaClientes extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblMontoTotal2;
     private javax.swing.JPanel panelIdentificarse;
     private javax.swing.JPanel panelMensajes;
     private javax.swing.JPanel panelMenu;
     private javax.swing.JPanel panelPedidos;
     private javax.swing.JTable tblPedidos;
+    private java.awt.TextArea textArea1;
     private javax.swing.JTextArea txtComentario;
     private javax.swing.JPasswordField txtPass;
     private javax.swing.JTextField txtUser;
@@ -477,16 +491,34 @@ public class VistaClientes extends javax.swing.JFrame {
         this.controlador.loginCliente(usr, pwd, 0);
     }
 
-    private void setTitulo(String nombre) {
+    public void setTitulo(String nombre) {
         setTitle("Procesar Pedidos - " + nombre);
     }
 
+    private void agregarMensaje(String mensaje) {
+        if (modeloMensajes.size() == 6) {
+            modeloMensajes.remove(5);
+        }
+        modeloMensajes.add(0, mensaje);
+        modeloMensajes.add(1, "-----------------------");
+    }
+    
+    
     public void mensaje(String ex, String msg) {
-        lblError.setText(ex + msg);
+        agregarMensaje(ex + msg);
     }
 
     public void mensaje(String ex){
-        lblError.setText(ex);
+        agregarMensaje(ex);
+    }
+
+    public void finalizado(String titulo, String mensaje){
+        JOptionPane.showMessageDialog(
+            null,
+            mensaje,
+            titulo,
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     public void mostrarPedidos(ArrayList<Pedido> pedidos) {
@@ -497,7 +529,7 @@ public class VistaClientes extends javax.swing.JFrame {
             modelo.addRow(new Object[] {
                 p.getItem(),
                 p.getComentario(),
-                p.getComentario(),
+                p.miEstado(),
                 p.getUnidad(),
                 p.getGestor(),
                 p.getPrecio()
@@ -511,4 +543,33 @@ public class VistaClientes extends javax.swing.JFrame {
         lblMontoTotal2.setText("$" + costo);
     }
     
+    
+    private void limpiarVista() {
+        limpiarLogin();
+        limpiarMenu();
+        limpiarTabla();
+        limpiarMensajes();
+    }
+
+    private void limpiarTabla() {
+        tblPedidos.setModel(new DefaultTableModel());
+    }
+
+    private void limpiarMensajes() {
+        modeloMensajes = new DefaultListModel<>();
+        jListMensajes.setModel(modeloMensajes);
+    }
+
+    private void limpiarMenu(){
+        jListCategorias.setModel(new DefaultListModel());
+        jListItems.setListData(new ArrayList().toArray());
+        txtComentario.setText("");
+        
+    }
+
+    private void limpiarLogin() {
+        txtUser.setText("");
+        txtPass.setText("");
+    }
+
 }

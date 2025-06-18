@@ -38,5 +38,10 @@ public class EnProceso extends Estado {
         throw new PedidoClienteException("Debe Finalizar primero");
     }
 
+    @Override
+    public String quienSoy() {
+        return "En Proceso";
+    }
+
     
 }

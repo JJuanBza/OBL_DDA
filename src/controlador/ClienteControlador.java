@@ -61,6 +61,7 @@ public class ClienteControlador implements Observador{
             c.logIN();
             
             vista.mensaje("Bienvenido ", c.getNombreCompleto());
+            vista.setTitulo(c.getNombreCompleto());
             
         }catch(IdentificacionException ex){
             vista.mensaje(ex.getMessage());
@@ -68,7 +69,8 @@ public class ClienteControlador implements Observador{
     }
     
     private void mostrarPedidos(){
-        vista.mostrarPedidos(this.dispositivo.getPedidos());
+        ArrayList<Pedido> p = this.dispositivo.getPedidos();
+        vista.mostrarPedidos(p);
     }
     
     private void actualizarCostoTotal() {
@@ -111,6 +113,7 @@ public class ClienteControlador implements Observador{
             LocalDateTime fecha = LocalDateTime.now();
             this.dispositivo.confirmar(fecha);
             
+            
             vista.mensaje("Servicio Confirmado");
         }catch(PedidoClienteException ex){
             vista.mensaje(ex.getMessage());
@@ -122,8 +125,17 @@ public class ClienteControlador implements Observador{
     public void finalizarServicio() {
         try{
             validarCliente();
-            validarPedidos();
             
+            if(this.dispositivo.hayPedidos()){
+                validarPedidos();
+            
+                this.dispositivo.finalizar();
+                vista.finalizado("Servicio Finalizado", this.dispositivo.pedidosNoEntregados() + this.dispositivo.beneficioAplicado() + "  Monto a Pagar: " + this.dispositivo.getFinal());
+            }            
+            
+            //desvincular dispositivo
+            this.dispositivo.desvincular();
+            vista.inicializar();
             
         }catch(UsuarioNULOException ex){
             vista.mensaje(ex.getMessage(), "Finalizar Servicio");
@@ -151,30 +163,25 @@ public class ClienteControlador implements Observador{
     }
 
     private void validarIndice(int indice) throws Exception{
-        if(indice == -1) throw new Exception("Seleccione un pedido PERRA");
+        if(indice == -1) throw new Exception("Seleccione un pedido!");
     }
 
     private void validarItem(Item i) throws Exception{
-        if(i == null) throw new Exception("Debe seleccionar un Item");
+        if(i == null) throw new Exception("Debe seleccionar un Item!");
     }
 
+    
     private void validarPedidos() throws PedidoClienteException{
-        this.dispositivo.validarPedidos();
+        this.dispositivo.pedidosConfirmados();
     }
 
     @Override
     public void actualizar(Observable origen, Object evento) {
-        /*
-        if(EstadosSistema.ALTA_PEDIDO.equals(evento) || EstadosSistema.BAJA_PEDIDO.equals(evento)){
+        if(EstadosSistema.ALTA_PEDIDO.equals(evento) || EstadosSistema.BAJA_PEDIDO.equals(evento) || EstadosSistema.CONFIRMADO.equals(evento)){
             //traer los pedidos
             this.mostrarPedidos();
             //actualizar el monto total
             this.actualizarCostoTotal();
         }
-*/
-        //traer los pedidos
-        this.mostrarPedidos();
-        //actualizar el monto total
-        this.actualizarCostoTotal();
     }
 }

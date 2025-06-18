@@ -2,22 +2,29 @@ package dominio.beneficios;
 
 import dominio.Servicio;
 
-public class Gratis implements Beneficio{
+public class Gratis extends Beneficio{
 
-    private float valorGratis;
+    private double valorGratis;
     
-    public Gratis(float p){
+    public Gratis(double p){
         valorGratis = p;
     }
 
     @Override
     public String descripcion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return "Tiene " + valorGratis + " de consumo gratis por Servicio!";
     }
 
     @Override
-    public float calcular(Servicio s) {
+    public double calcular(Servicio s) {
+        if(s.getMontoTotal() < this.valorGratis) return s.getMontoTotal();
+        
         return this.valorGratis;
+    }
+
+    @Override
+    public boolean fuiAplicado() {
+        return true;
     }
 
 }

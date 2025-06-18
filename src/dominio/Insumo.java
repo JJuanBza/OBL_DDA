@@ -5,12 +5,12 @@ public class Insumo {
 
     private String nombre;
 
-    private int stockMinimo;
+    private double stockMinimo;
 
-    private int stockActual;
+    private double stockActual;
 
 
-    public Insumo(String nombre, int min, int actual){
+    public Insumo(String nombre, double min, double actual){
         this.nombre = nombre;
         this.stockMinimo = min;
         this.stockActual = actual;
@@ -26,6 +26,10 @@ public class Insumo {
 
     void descontarStock(double cantidad) {
         this.stockActual -= cantidad;
+    }
+    
+    void reintegrarStock(double cantidad) {
+        this.stockActual += cantidad;
     }
 
     @Override

@@ -30,6 +30,10 @@ public class Entregado extends Estado {
         throw new PedidoClienteException("El pedido ya está entregado");
     }
 
-   
+    @Override
+    public String quienSoy() {
+        return "Entregado";
+    }
+
 
 }

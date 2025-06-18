@@ -20,6 +20,15 @@ public class TipoCliente {
     public String getNombre() {
         return nombre;
     }
+    
+    public String getNombreBeneficios(){
+        String ret = "";
+        for(Beneficio b : this.getBeneficios()){
+            if(b.fuiAplicado()) ret = ret + b.descripcion() + ", ";
+        }
+        
+        return ret;
+    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -30,10 +39,10 @@ public class TipoCliente {
     }
     
     public float calcularMontoConBeneficios(Servicio s) {
-    float totalBeneficios = 0;
-    for (Beneficio b : beneficios) {
-        totalBeneficios += b.calcular(s); // cada beneficio usa la lógica que necesita
+        float totalBeneficios = 0;
+        for (Beneficio b : beneficios) {
+            totalBeneficios += b.calcular(s); // cada beneficio usa la lógica que necesita
+        }
+        return totalBeneficios;
     }
-    return s.getMontoTotal() - totalBeneficios;
-}
 }

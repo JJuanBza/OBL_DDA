@@ -11,6 +11,9 @@ import java.util.Objects;
 
 public class Pedido extends Observable{
 
+    private static int cont = 0;
+    private final int id;
+    
     private Item item;
     private String comentario;
     private Estado estado = new NoConfirmado(this);
@@ -19,16 +22,26 @@ public class Pedido extends Observable{
     private double precio;
     private LocalDateTime fecha;
 
+    
+
+  
     public enum Estados{NO_CONFIRMADO,CONFIRMADO,EN_PROCESO, FINALIZADO, ENTEGADO};
     
     public Pedido(Item i, String comentario){
+        this.id = cont++;
         this.item = i;
         this.comentario = comentario;
         this.unidad = i.getUnidad();
         this.precio = i.getPrecio();
     }
     
-    public Pedido(Item i){ this.item = i;}
+    //public Pedido(){}
+    
+    /*
+    public Pedido(Item i){
+        this.item = i;
+    }
+    */
 
 
     public Item getItem(){ return this.item;}
@@ -43,6 +56,7 @@ public class Pedido extends Observable{
 
     public double getPrecio() { return this.precio;}
 
+    public String miEstado(){ return this.estado.quienSoy();}
 
     
     public void cambiarEstado(Estado estado) {
@@ -53,7 +67,12 @@ public class Pedido extends Observable{
         return estado.mismoEstado(Estados.CONFIRMADO);
     }
 
-    void confirmar(LocalDateTime fecha) throws PedidoClienteException {
+    boolean estoyEntregado() {
+        return estado.mismoEstado(Estados.ENTEGADO);
+    }
+    
+    
+    public void confirmar(LocalDateTime fecha) throws PedidoClienteException {
         //Descuenta el stock de los insumos de todos los ítems de los pedidos
         this.item.descontarStock();
         
@@ -86,6 +105,8 @@ public class Pedido extends Observable{
 
     public void validarEstado() throws PedidoClienteException{
         if(!estado.mismoEstado(Estados.NO_CONFIRMADO) && !estado.mismoEstado(Estados.CONFIRMADO)) throw new PedidoClienteException("Un poco tarde… Ya estamos elaborando este pedido!");
+        
+        if(this.estoyConfirmado()){ this.item.reintegrarStock();}
     }
 
     /**
@@ -94,6 +115,10 @@ public class Pedido extends Observable{
     public void agregarPedido() {
         unidad.agregarPedido(this);
 
+    }
+    
+    boolean tengoItem(Item i) {
+        return this.item.equals(i);
     }
 
     @Override
@@ -114,7 +139,7 @@ public class Pedido extends Observable{
             return false;
         }
         final Pedido other = (Pedido) obj;
-        return Objects.equals(this.item, other.item);
+        return Objects.equals(this.id, other.id);
     }
         
 }
