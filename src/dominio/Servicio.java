@@ -50,10 +50,9 @@ public class Servicio extends Observable{
         return montoBeneficio;
     }
 
-
     public void confirmar(LocalDateTime fecha) throws PedidoClienteException{
         this.validarConfirmarStockPedidos(fecha, this.existenPedidos());
-        avisar(EstadosSistema.CONFIRMADO);
+        avisar(EstadosSistema.ACTUALIZAR);
     }
 
     public void eliminarPedido(int indicePedido) throws PedidoClienteException{
@@ -81,7 +80,7 @@ public class Servicio extends Observable{
     
 
     public void agregarPedido(Item item, String comentario) throws PedidoClienteException {
-        Pedido p = new Pedido(item, comentario);
+        Pedido p = new Pedido(item, comentario, this.cliente);
         
         p.validarDisponibilidad();
         this.pedidos.add(p);

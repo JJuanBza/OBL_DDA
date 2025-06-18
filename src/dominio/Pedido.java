@@ -1,9 +1,9 @@
 package dominio;
 
-import dominio.estadoPedido.Confirmado;
 import dominio.estadoPedido.Estado;
 import dominio.estadoPedido.NoConfirmado;
 import dominio.observer.Observable;
+import dominio.user.Cliente;
 import dominio.user.Gestor;
 import excepciones.PedidoClienteException;
 import java.time.LocalDateTime;
@@ -19,29 +19,24 @@ public class Pedido extends Observable{
     private Estado estado = new NoConfirmado(this);
     private Unidad unidad;
     private Gestor gestor;
+    private Cliente cliente;
     private double precio;
     private LocalDateTime fecha;
 
+    public enum Estados{NO_CONFIRMADO,CONFIRMADO,EN_PROCESO, FINALIZADO, ENTREGADO};
     
-
-  
-    public enum Estados{NO_CONFIRMADO,CONFIRMADO,EN_PROCESO, FINALIZADO, ENTEGADO};
-    
-    public Pedido(Item i, String comentario){
+    public Pedido(Item i, String comentario, Cliente cli){
         this.id = cont++;
         this.item = i;
         this.comentario = comentario;
         this.unidad = i.getUnidad();
+        this.cliente = cli;
         this.precio = i.getPrecio();
+        
+        this.agregarObservador(unidad);
     }
     
-    //public Pedido(){}
     
-    /*
-    public Pedido(Item i){
-        this.item = i;
-    }
-    */
 
 
     public Item getItem(){ return this.item;}
@@ -58,6 +53,23 @@ public class Pedido extends Observable{
 
     public String miEstado(){ return this.estado.quienSoy();}
 
+    public String nombreItem() {
+        return this.item.getNombre();
+    }
+
+    public String getCliente() {
+        return this.cliente.getNombreCompleto();
+    }
+
+    public LocalDateTime getFechaHora() {
+        return this.fecha;
+    }
+    
+    public void setGestor(Gestor gestor) throws PedidoClienteException {
+        this.gestor = gestor;
+        this.estado.procesar();
+        avisar(EstadosSistema.ACTUALIZAR);
+    }
     
     public void cambiarEstado(Estado estado) {
         this.estado = estado;
@@ -68,7 +80,7 @@ public class Pedido extends Observable{
     }
 
     boolean estoyEntregado() {
-        return estado.mismoEstado(Estados.ENTEGADO);
+        return estado.mismoEstado(Estados.ENTREGADO);
     }
     
     
@@ -76,12 +88,18 @@ public class Pedido extends Observable{
         //Descuenta el stock de los insumos de todos los ítems de los pedidos
         this.item.descontarStock();
         
-        //envía los pedidos a la unidad procesadora correspondiente a cada ítem
-        this.agregarPedido();
-        
         //actualiza los datos del servicio
         this.fecha = fecha;
         this.estado.confirmar();
+        
+        //envía los pedidos a la unidad procesadora correspondiente a cada ítem
+        this.agregarPedido();
+        
+    }
+    
+    public void tomarPedido() throws PedidoClienteException {
+        this.estado.procesar();
+        this.unidad.actualizarPedidos();
     }
 
     /**
@@ -114,7 +132,6 @@ public class Pedido extends Observable{
      */
     public void agregarPedido() {
         unidad.agregarPedido(this);
-
     }
     
     boolean tengoItem(Item i) {

@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Emiliano Barcosta
  */
-public class VistaClientes extends javax.swing.JFrame {
+public class VistaClientes extends VistaBase {
 
     private ClienteControlador controlador;
 
@@ -495,21 +495,9 @@ public class VistaClientes extends javax.swing.JFrame {
         setTitle("Procesar Pedidos - " + nombre);
     }
 
-    private void agregarMensaje(String mensaje) {
-        if (modeloMensajes.size() == 6) {
-            modeloMensajes.remove(5);
-        }
-        modeloMensajes.add(0, mensaje);
-        modeloMensajes.add(1, "-----------------------");
-    }
-    
-    
-    public void mensaje(String ex, String msg) {
-        agregarMensaje(ex + msg);
-    }
-
-    public void mensaje(String ex){
-        agregarMensaje(ex);
+    @Override
+    public void mandarMensaje(String msg) {
+        this.mensaje(modeloMensajes, msg);
     }
 
     public void finalizado(String titulo, String mensaje){
@@ -571,5 +559,7 @@ public class VistaClientes extends javax.swing.JFrame {
         txtUser.setText("");
         txtPass.setText("");
     }
+
+    
 
 }

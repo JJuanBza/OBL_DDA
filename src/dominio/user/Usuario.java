@@ -1,15 +1,15 @@
 package dominio.user;
 
 import dominio.user.Gestor;
+import excepciones.IdentificacionException;
 import java.util.Objects;
 
 public abstract class Usuario {
 
     private String usuario;
-
     private String password;
-
     private String nombreCompleto;
+    private boolean logged;
     
     
     public Usuario(String user, String pass){
@@ -23,10 +23,20 @@ public abstract class Usuario {
         this.nombreCompleto = nomCom;
     }
     
+    public boolean getLogged(){
+        return this.logged;
+    }
+    
+    public void login(){ this.logged = true;}
+    
+    public void logout(){ this.logged = false;}
+    
     public String getNombreCompleto(){
         return this.nombreCompleto;
     }
 
+    public abstract void yaEstoyLogeado() throws IdentificacionException;
+    
     @Override
     public int hashCode() {
         int hash = 7;

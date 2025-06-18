@@ -30,7 +30,7 @@ public class Dispositivo implements Observador{
         this.servicio.setCliente(c);
     }
     public void desvincular() {
-        this.cliente.LogOUT();
+        this.cliente.logout();
         this.setCliente(null);
         this.setServicio(new Servicio());
         
@@ -70,10 +70,7 @@ public class Dispositivo implements Observador{
         this.servicio.existenPedidos();
     }
 
-    @Override
-    public void actualizar(Observable origen, Object evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+
 
     @Override
     public int hashCode() {
@@ -124,5 +121,10 @@ public class Dispositivo implements Observador{
 
     public boolean hayPedidos() {
         return this.servicio.hayPedidos();
+    }
+
+    @Override
+    public void actualizar(Observable origen, Object evento) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

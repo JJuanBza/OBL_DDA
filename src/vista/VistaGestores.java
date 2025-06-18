@@ -4,23 +4,38 @@
  */
 package vista;
 
-import java.awt.Font;
-import javax.swing.JLabel;
+import dominio.user.Gestor;
+import controlador.GestorControlador;
+import dominio.EstadosSistema;
+import dominio.Pedido;
+import dominio.observer.Observable;
+import dominio.observer.Observador;
+import excepciones.PedidoClienteException;
+import java.awt.Component;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 /**
  *
  * @author Emiliano Barcosta
  */
-public class VistaGestores extends javax.swing.JFrame {
+public class VistaGestores extends VistaBase implements Observador{
 
+    private GestorControlador controlador;
     /**
      * Creates new form Gestor
      */
-    public VistaGestores(dominio.user.Gestor g) {
+    public VistaGestores(Gestor g) {
         initComponents();
         
-        lblName.setText("Gestor: " + g.getNombre() + " | Unidad Procesadora: " + g.getNombreUnidad());
-        setTitle("Procesar Pedidos");
+        this.controlador = new GestorControlador(this, g);
+        iniciar(g);
+        
     }
 
     /**
@@ -38,10 +53,12 @@ public class VistaGestores extends javax.swing.JFrame {
         jTablePedidos = new javax.swing.JTable();
         btnTomar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListPedidos = new javax.swing.JList();
+        jListPedidos = new javax.swing.JList<>();
         btnEntregar = new javax.swing.JButton();
         btnFinalizar = new javax.swing.JButton();
         lblName = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jListMensajes = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -59,6 +76,11 @@ public class VistaGestores extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTablePedidos);
 
         btnTomar.setText("Tomar Pedido");
+        btnTomar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTomarActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setViewportView(jListPedidos);
 
@@ -85,10 +107,22 @@ public class VistaGestores extends javax.swing.JFrame {
         );
 
         btnEntregar.setText("Entregar Pedido");
+        btnEntregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntregarActionPerformed(evt);
+            }
+        });
 
         btnFinalizar.setText("Finalizar Pedido");
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarActionPerformed(evt);
+            }
+        });
 
         lblName.setText("jLabel1");
+
+        jScrollPane5.setViewportView(jListMensajes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,18 +131,19 @@ public class VistaGestores extends javax.swing.JFrame {
             .addComponent(jSeparator1)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(23, 23, 23)
-                            .addComponent(pnlVisor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(39, 39, 39)
-                            .addComponent(lblName)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnFinalizar)
-                        .addGap(27, 27, 27)
-                        .addComponent(btnEntregar)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(lblName))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnFinalizar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEntregar))
+                            .addComponent(pnlVisor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -116,32 +151,112 @@ public class VistaGestores extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(lblName)
-                .addGap(29, 29, 29)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pnlVisor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEntregar)
-                    .addComponent(btnFinalizar))
-                .addGap(21, 21, 21))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFinalizar)
+                            .addComponent(btnEntregar))
+                        .addGap(42, 42, 42))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlVisor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnTomarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTomarActionPerformed
+        //tomar pedido seleccionado en jListPedidos y mandar a controlador para que tome el pedido
+        Pedido seleccionado = jListPedidos.getSelectedValue();
+        if (seleccionado != null) {
+            try {
+                controlador.procesarPedidoSeleccionado(seleccionado);
+                //this.mandarMensaje("Tomaste el Pedido " + seleccionado);
+            } catch (PedidoClienteException ex) {
+                this.mandarMensaje(ex.getMessage());
+            }
+        } else {
+            this.mandarMensaje("Seleccione un pedido primero");
+        }
+    }//GEN-LAST:event_btnTomarActionPerformed
+
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        //tomar pedido seleccionado en jTablePedidos y mandar a controlador para que finalize el pedido
+    }//GEN-LAST:event_btnFinalizarActionPerformed
+
+    private void btnEntregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntregarActionPerformed
+        //tomar pedido seleccionado en jTablePedidos y mandar a controlador para que entregue el pedido
+    }//GEN-LAST:event_btnEntregarActionPerformed
+
    
 
+    private DefaultListModel<String> modeloMensajes = new DefaultListModel<>();
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntregar;
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnTomar;
-    private javax.swing.JList jListPedidos;
+    private javax.swing.JList<String> jListMensajes;
+    private javax.swing.JList<Pedido> jListPedidos;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTablePedidos;
     private javax.swing.JLabel lblName;
     private javax.swing.JPanel pnlVisor;
     // End of variables declaration//GEN-END:variables
+
+    private void iniciar(Gestor g) {
+        jListMensajes.setModel(modeloMensajes);
+        lblName.setText("Gestor: " + g.getNombre() + " | Unidad Procesadora: " + g.getNombreUnidad());
+        setTitle("Procesar Pedidos");
+        
+        cargarPedidosUnidad();
+    }
+    
+    public void cargarPedidosUnidad() {
+        DefaultListModel<Pedido> modelo = new DefaultListModel<>();
+        ArrayList<Pedido> pedidos = this.controlador.obtenerPedidosUnidad();
+
+        for (Pedido p : pedidos) {
+            modelo.addElement(p); // Agregás el objeto real
+        }
+
+        jListPedidos.setModel(modelo);
+
+        // Renderer para mostrar el texto personalizado
+        jListPedidos.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                Pedido p = (Pedido) value;
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                String texto = p.nombreItem() + " - Cliente: " + p.getCliente() + " - " + p.getFechaHora().format(formatter);
+                setText(texto);
+                return this;
+            }
+        });
+}
+
+
+    @Override
+    public void actualizar(Observable origen, Object evento) {
+        if(EstadosSistema.ACTUALIZAR.equals(evento)){
+            this.cargarPedidosUnidad();
+        }
+    }
+
+    @Override
+    public void mandarMensaje(String msg) {
+        this.mensaje(modeloMensajes, msg);
+    }
+
+    
 }

@@ -11,6 +11,6 @@ package dominio;
 public enum EstadosSistema {
     ALTA_PEDIDO,
     BAJA_PEDIDO,
-    CONFIRMADO, 
+    ACTUALIZAR, 
     FINALIZADO
 }

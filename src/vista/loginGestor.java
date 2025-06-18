@@ -5,7 +5,10 @@
 package vista;
 
 import controlador.GestorControlador;
+import dominio.user.Gestor;
+import excepciones.IdentificacionException;
 import javax.swing.JOptionPane;
+import servicio.Fachada;
 
 /**
  *
@@ -20,7 +23,6 @@ public class loginGestor extends javax.swing.JFrame {
      */
     public loginGestor() {
         initComponents();
-        control = new GestorControlador();
     }
 
     /**
@@ -37,6 +39,7 @@ public class loginGestor extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         txtPass = new javax.swing.JPasswordField();
+        lblMensaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -70,31 +73,35 @@ public class loginGestor extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(121, 121, 121)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(70, 70, 70)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addGap(48, 48, 48)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUser)
-                            .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(121, 121, 121)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblMensaje)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtUser)
+                                .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(78, 78, 78)
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(39, 39, 39)
+                    .addComponent(jLabel1)
+                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addGap(39, 39, 39)
+                .addComponent(lblMensaje)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
         );
@@ -119,7 +126,22 @@ public class loginGestor extends javax.swing.JFrame {
         String usr = txtUser.getText();
         String pwd = new String(txtPass.getPassword());
 
-        
+        try{
+            //valida credenciales
+            Gestor g = Fachada.getInstancia().loginGestor(usr, pwd);
+            //pregunta si esta logeado
+            g.yaEstoyLogeado();
+            //marca como logeado
+            g.login();
+            
+            //abre la vista
+            new VistaGestores(g).setVisible(true);
+            //cierra login
+            dispose();
+            
+        }catch(IdentificacionException ex){
+            lblMensaje.setText(ex.getMessage());
+        }
     }
 
 
@@ -127,6 +149,7 @@ public class loginGestor extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblMensaje;
     private javax.swing.JPasswordField txtPass;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables

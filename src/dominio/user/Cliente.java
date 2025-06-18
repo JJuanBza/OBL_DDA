@@ -4,7 +4,6 @@ import excepciones.IdentificacionException;
 
 public class Cliente extends Usuario{
 
-    private boolean logged;
     private TipoCliente tipoCliente;
 
     
@@ -22,20 +21,14 @@ public class Cliente extends Usuario{
     }
     
     public TipoCliente getTipoCliente(){ return this.tipoCliente;}
-        
-    public void isLogged() throws IdentificacionException{
-        if(this.logged) throw new IdentificacionException("Ud. ya está identificado en otro dispositivo");
-    }
-
-    public void logIN() {
-        this.logged = true;
-    }
-    
-    public void LogOUT(){ this.logged = false;}
-
 
     public void setTipoCliente(TipoCliente tipoCliente) {
         this.tipoCliente = tipoCliente;
+    }
+
+    @Override
+    public void yaEstoyLogeado() throws IdentificacionException {
+        if(this.getLogged()) throw new IdentificacionException("Ud. ya está identificado en otro dispositivo");
     }
     
     

@@ -7,7 +7,7 @@ import excepciones.PedidoClienteException;
 public class Entregado extends Estado {
 
     public Entregado(Pedido p) {
-        super(p, Estados.ENTEGADO);
+        super(p, Estados.ENTREGADO);
     }
 
     @Override

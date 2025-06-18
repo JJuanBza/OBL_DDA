@@ -13,7 +13,6 @@ public class ServicioUsuario {
     //private ArrayList<Usuario> usuarios; ???
     
     private ArrayList<Usuario> clientes;
-    
     private ArrayList<Usuario> gestores;
     
     public ServicioUsuario(){

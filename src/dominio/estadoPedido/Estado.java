@@ -16,6 +16,7 @@ public abstract class Estado {
     }
     public Pedido getPedido(){ return this.pedido;}
 
+    //public abstract void siguienteEstado();
     public abstract void confirmar() throws PedidoClienteException;
     public abstract void procesar() throws PedidoClienteException;
     public abstract void finalizar() throws PedidoClienteException;

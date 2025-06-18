@@ -1,7 +1,6 @@
 package servicio;
 
 import dominio.Categoria;
-import dominio.Item;
 import dominio.user.Cliente;
 import dominio.user.Gestor;
 import dominio.Pedido;
@@ -16,7 +15,6 @@ public class Fachada {
     private static Fachada instancia = new Fachada();
 
     private ServicioUsuario servicioUsuario = new ServicioUsuario();
-
     private ServicioDispositivo servicioDispositivo = new ServicioDispositivo();
 
 
