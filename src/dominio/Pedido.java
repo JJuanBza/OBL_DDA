@@ -23,6 +23,7 @@ public class Pedido extends Observable{
     private double precio;
     private LocalDateTime fecha;
 
+
     public enum Estados{NO_CONFIRMADO,CONFIRMADO,EN_PROCESO, FINALIZADO, ENTREGADO};
     
     public Pedido(Item i, String comentario, Cliente cli){
@@ -32,8 +33,6 @@ public class Pedido extends Observable{
         this.unidad = i.getUnidad();
         this.cliente = cli;
         this.precio = i.getPrecio();
-        
-        this.agregarObservador(unidad);
     }
     
     
@@ -79,8 +78,12 @@ public class Pedido extends Observable{
         return estado.mismoEstado(Estados.CONFIRMADO);
     }
 
-    boolean estoyEntregado() {
+    public boolean estoyEntregado() {
         return estado.mismoEstado(Estados.ENTREGADO);
+    }
+    
+    boolean soyNoConfirmado() {
+        return estado.mismoEstado(Estados.NO_CONFIRMADO);
     }
     
     
@@ -93,13 +96,23 @@ public class Pedido extends Observable{
         this.estado.confirmar();
         
         //envía los pedidos a la unidad procesadora correspondiente a cada ítem
-        this.agregarPedido();
+        this.agregarPedidoUnidad();
         
     }
     
     public void tomarPedido() throws PedidoClienteException {
         this.estado.procesar();
         this.unidad.actualizarPedidos();
+    }
+    
+    public void finalizarPedido() throws PedidoClienteException {
+        this.estado.finalizar();
+        avisar(EstadosSistema.ACTUALIZAR);
+    }
+    
+    public void entregarPedido() throws PedidoClienteException {
+        this.estado.entregar();
+        avisar(EstadosSistema.ACTUALIZAR);
     }
 
     /**
@@ -113,13 +126,6 @@ public class Pedido extends Observable{
     public void descontarStock(LocalDateTime fecha){
         this.fecha = fecha;
     }
-    /**
-     * unidad.eliminarPedido(this);
-     */
-    public void eliminar(Pedido p) {
-
-    }
-
 
     public void validarEstado() throws PedidoClienteException{
         if(!estado.mismoEstado(Estados.NO_CONFIRMADO) && !estado.mismoEstado(Estados.CONFIRMADO)) throw new PedidoClienteException("Un poco tarde… Ya estamos elaborando este pedido!");
@@ -130,8 +136,12 @@ public class Pedido extends Observable{
     /**
      * unidad.agregarPedido(this);
      */
-    public void agregarPedido() {
+    public void agregarPedidoUnidad() {
         unidad.agregarPedido(this);
+    }
+    
+    public void eliminarPedidoUnidad(){
+        unidad.removerPedido(this);
     }
     
     boolean tengoItem(Item i) {

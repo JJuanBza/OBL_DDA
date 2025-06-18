@@ -12,13 +12,15 @@ import dominio.observer.Observable;
 import dominio.observer.Observador;
 import excepciones.PedidoClienteException;
 import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -31,7 +33,21 @@ public class VistaGestores extends VistaBase implements Observador{
      * Creates new form Gestor
      */
     public VistaGestores(Gestor g) {
+        
         initComponents();
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (puedeCerrarVentana()) {
+                    controlador.logOut();
+                    dispose();
+                } else {
+                    mandarMensaje("Tiene pedidos pendientes");
+                }
+            }
+        });
         
         this.controlador = new GestorControlador(this, g);
         iniciar(g);
@@ -60,7 +76,7 @@ public class VistaGestores extends VistaBase implements Observador{
         jScrollPane5 = new javax.swing.JScrollPane();
         jListMensajes = new javax.swing.JList<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jTablePedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -188,10 +204,12 @@ public class VistaGestores extends VistaBase implements Observador{
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         //tomar pedido seleccionado en jTablePedidos y mandar a controlador para que finalize el pedido
+        this.controlador.finalizarPedido(jTablePedidos.getSelectedRow());
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void btnEntregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntregarActionPerformed
         //tomar pedido seleccionado en jTablePedidos y mandar a controlador para que entregue el pedido
+        this.controlador.entregarPedido(jTablePedidos.getSelectedRow());
     }//GEN-LAST:event_btnEntregarActionPerformed
 
    
@@ -258,5 +276,25 @@ public class VistaGestores extends VistaBase implements Observador{
         this.mensaje(modeloMensajes, msg);
     }
 
+    public void mostrarPedidosTomados(ArrayList<Pedido> pedidos) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new Object[] { "Nombre del Item", "Descripción", "Cliente", "FechaHora", "Estado" });
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        
+        for (Pedido p : pedidos) {
+            modelo.addRow(new Object[] {
+                p.nombreItem(),
+                p.getComentario(),
+                p.getCliente(),
+                p.getFechaHora().format(formatter),
+                p.miEstado()
+            });
+        }
+
+        jTablePedidos.setModel(modelo);
+    }
     
+    private boolean puedeCerrarVentana() {
+        return this.controlador.pedidosTodosEntregados();
+    }
 }

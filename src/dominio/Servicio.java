@@ -1,12 +1,13 @@
 package dominio;
 
 import dominio.observer.Observable;
+import dominio.observer.Observador;
 import dominio.user.Cliente;
 import excepciones.PedidoClienteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Servicio extends Observable{
+public class Servicio extends Observable implements Observador{
 
     private Cliente cliente;
     private ArrayList<Pedido> pedidos;
@@ -65,8 +66,10 @@ public class Servicio extends Observable{
         p.validarEstado();
         this.pedidos.remove(p);
         this.montoTotal -= p.getPrecio();
+        p.eliminarPedidoUnidad();
         
         avisar(EstadosSistema.BAJA_PEDIDO);
+        p.avisar(EstadosSistema.BAJA_PEDIDO);
     }
     
     private void eliminarPedidosAlfinal(ArrayList<Pedido> pedidos){
@@ -85,6 +88,7 @@ public class Servicio extends Observable{
         p.validarDisponibilidad();
         this.pedidos.add(p);
         this.montoTotal += p.getPrecio();
+        p.agregarObservador(this);
         
         avisar(EstadosSistema.ALTA_PEDIDO);
     }
@@ -115,8 +119,8 @@ public class Servicio extends Observable{
         ArrayList<Pedido> nuevos = new ArrayList();
         
         for(Pedido p : this.getPedidos()){
-            boolean b = p.estoyConfirmado();
-            if(!b) nuevos.add(p);
+            boolean b = p.soyNoConfirmado();
+            if(b) nuevos.add(p);
         }
         
         if(nuevos.isEmpty()) throw new PedidoClienteException("No hay pedidos nuevos");
@@ -149,7 +153,8 @@ public class Servicio extends Observable{
 
     void pedidosConfirmados() throws PedidoClienteException{
         for(Pedido p : this.getPedidos()){
-            if(!p.estoyConfirmado()) throw new PedidoClienteException("Tiene pedidos sin Confirmar!");
+            //de confirmado pa rriba
+            if(p.soyNoConfirmado()) throw new PedidoClienteException("Tiene pedidos sin Confirmar!");
         }
     }
 
@@ -172,6 +177,11 @@ public class Servicio extends Observable{
 
     boolean hayPedidos(){
         return !this.pedidos.isEmpty();
+    }
+
+    @Override
+    public void actualizar(Observable origen, Object evento) {
+        avisar(EstadosSistema.ACTUALIZAR);
     }
 
 

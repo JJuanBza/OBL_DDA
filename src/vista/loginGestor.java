@@ -15,8 +15,6 @@ import servicio.Fachada;
  * @author Emiliano Barcosta
  */
 public class loginGestor extends javax.swing.JFrame {
-
-    private GestorControlador control;
     
     /**
      * Creates new form loginGestor

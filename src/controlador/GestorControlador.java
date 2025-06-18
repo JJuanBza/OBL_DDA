@@ -54,19 +54,67 @@ public class GestorControlador implements Observador{
         if(EstadosSistema.ACTUALIZAR.equals(evento)){
             //traer los pedidos
             vista.cargarPedidosUnidad();
+            vista.mostrarPedidosTomados(this.gestor.getPedidosTomados());
+        }
+        
+        if(EstadosSistema.BAJA_PEDIDO.equals(evento)){
+            vista.cargarPedidosUnidad();
         }
     }
 
     public void procesarPedidoSeleccionado(Pedido seleccionado) throws PedidoClienteException {
-        //Registra que ese pedido está siendo procesado por ese gestor
-        seleccionado.setGestor(this.gestor);
         
-        //lo agrega a la lista de pedidos tomados del gestor
-        //cambia estado del pedido a EnProceso
-        this.gestor.tomarPedido(seleccionado);
-        
-        //lo quita de la lista de pedidos pendientes
-        this.unidad.pedidoTomado(seleccionado);
+        try{
+            //Registra que ese pedido está siendo procesado por ese gestor
+            seleccionado.setGestor(this.gestor);
+
+            //lo agrega a la lista de pedidos tomados del gestor
+            //cambia estado del pedido a EnProceso
+            this.gestor.tomarPedido(seleccionado);
+
+            //lo quita de la lista de pedidos pendientes
+            this.unidad.pedidoTomado(seleccionado);
+        }catch(PedidoClienteException ex){
+            vista.mandarMensaje(ex.getMessage());    
+        }
+    }
+
+    public void finalizarPedido(int selectedRow) {
+        try{
+            this.validarIndice(selectedRow);
+            
+            //cambia estado a Finalizado
+            this.gestor.finalizarPedido(selectedRow);
+            
+        }catch(Exception ex){
+            vista.mandarMensaje(ex.getMessage());
+        }
+    }
+
+    public void entregarPedido(int selectedRow) {
+        try{
+            this.validarIndice(selectedRow);
+            
+            //cambia estado a Finalizado
+            this.gestor.entregarPedido(selectedRow);
+            
+        }catch(Exception ex){
+            vista.mandarMensaje(ex.getMessage());
+        }
+    }
+    
+    
+    private void validarIndice(int indice) throws Exception{
+        if(indice == -1) throw new Exception("Seleccione un pedido!");
+    }
+
+    public boolean pedidosTodosEntregados() {
+        return this.gestor.pedidosTodosEntregados();
+    }
+
+    public void logOut() {
+        this.gestor.logout();
+        this.gestor.limpiarPedidosAceptados();
     }
 
 }

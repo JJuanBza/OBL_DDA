@@ -1,11 +1,7 @@
 package dominio.user;
 
-import dominio.EstadosSistema;
 import dominio.Unidad;
 import dominio.Pedido;
-import dominio.estadoPedido.Estado;
-import dominio.observer.Observable;
-import dominio.observer.Observador;
 import excepciones.IdentificacionException;
 import excepciones.PedidoClienteException;
 import java.util.ArrayList;
@@ -43,11 +39,6 @@ public class Gestor extends Usuario /*implements Observador*/{
     public String getNombreUnidad(){
         return this.unidad.getUnidad();
     }
-    
-    @Override
-    public String toString() {
-        return this.getNombreCompleto();
-    }
 
     public ArrayList<Pedido> pedidosDisponibles() {
         return this.unidad.pedidosDisponibles();
@@ -71,7 +62,34 @@ public class Gestor extends Usuario /*implements Observador*/{
         this.pedidosAceptados.add(seleccionado);
     }
 
+    public ArrayList<Pedido> getPedidosTomados() {
+        return this.pedidosAceptados;
+    }
 
+    public void finalizarPedido(int selectedRow) throws PedidoClienteException {
+        Pedido p = this.pedidosAceptados.get(selectedRow);
+        p.finalizarPedido();
+    }
+
+    public void entregarPedido(int selectedRow) throws PedidoClienteException {
+        Pedido p = this.pedidosAceptados.get(selectedRow);
+        p.entregarPedido();
+    }
+
+    public boolean pedidosTodosEntregados() {
+        for(Pedido p : this.pedidosAceptados){
+            if(!p.estoyEntregado()) return false;
+        }
+        return true;
+    }
+
+    public void limpiarPedidosAceptados() {
+        this.pedidosAceptados.removeAll(pedidosAceptados);
+    }
+
+    public String getNombrecompleto() {
+        return this.getNombreCompleto();
+    }
     
 
 }

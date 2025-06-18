@@ -5,7 +5,6 @@
 package obl_dda;
 
 
-
 import dominio.Categoria;
 import dominio.Ingrediente;
 import dominio.Insumo;
@@ -13,6 +12,7 @@ import dominio.Item;
 import dominio.Unidad;
 import dominio.beneficios.Descuento;
 import dominio.beneficios.ProductoGratis;
+import dominio.beneficios.Gratis;
 import dominio.user.TipoCliente;
 import servicio.Fachada;
 import vista.MenuDesarrollador;
@@ -83,7 +83,62 @@ public class OBL_DDA {
         fachada.agregarCliente("b", "b", "Valtasar Blum", preferencial);
         
         
-        fachada.agregarGestor("w", "w", "William", ChefPastelero);
+        fachada.agregarGestor("pastel", "123", "William", ChefPastelero);
+        fachada.agregarGestor("p", "123", "el Brayan", ChefPastelero);
+        
+        
+        
+        // --- Unidades procesadoras ---
+        Unidad cocina = new Unidad("Cocina");
+        Unidad bar = new Unidad("Bar");
+
+        // --- Clientes ---
+        TipoCliente comun = new TipoCliente("Común");
+        TipoCliente deLaCasa = new TipoCliente("De la casa");
+        deLaCasa.agregarBeneficio(new Gratis(500));
+
+        fachada.agregarCliente("c", "c", "Pedro Peña", comun);
+        fachada.agregarCliente("d", "d", "Laura Lamas", deLaCasa);
+
+        // --- Gestores ---
+        fachada.agregarGestor("cocinero", "123", "Carlos Cocina", cocina);
+        fachada.agregarGestor("barman", "123", "Bruno Bar", bar);
+
+        // --- Categorías ---
+        Categoria principal = new Categoria("Plato Principal");
+        Categoria bebidas = new Categoria("Bebidas");
+
+        fachada.agregarCategoria(principal);
+        fachada.agregarCategoria(bebidas);
+
+        // --- Insumos ---
+        Insumo carne = new Insumo("Carne vacuna", 3, 10);
+        Insumo papas = new Insumo("Papas", 5, 10); // stock bajo para test
+        Insumo agua = new Insumo("Agua mineral", 10, 20);
+        Insumo cafe = new Insumo("Café", 5, 50);
+        Insumo gin = new Insumo("Gin", 2, 10);
+        Insumo tonica = new Insumo("Tónica", 2, 10);
+
+        // --- Ítems y sus ingredientes ---
+        Item milanesa = new Item("Milanesa con fritas", cocina, principal, 800);
+        milanesa.agregarIngrediente(new Ingrediente(carne, 1));
+        milanesa.agregarIngrediente(new Ingrediente(papas, 3));
+        principal.agregarItem(milanesa);
+
+        Item ginTonic = new Item("Gin Tonic", bar, bebidas, 600);
+        ginTonic.agregarIngrediente(new Ingrediente(gin, 1));
+        ginTonic.agregarIngrediente(new Ingrediente(tonica, 1));
+        bebidas.agregarItem(ginTonic);
+
+        Item aguaMineral = new Item("Agua Mineral", bar, bebidas, 100);
+        aguaMineral.agregarIngrediente(new Ingrediente(agua, 1));
+        bebidas.agregarItem(aguaMineral);
+
+        Item cafeSolo = new Item("Café", bar, bebidas, 150);
+        cafeSolo.agregarIngrediente(new Ingrediente(cafe, 1));
+        bebidas.agregarItem(cafeSolo);
+        
+        
         
         new MenuDesarrollador().setVisible(true);
     }

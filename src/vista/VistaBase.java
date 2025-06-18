@@ -49,12 +49,16 @@ public abstract class VistaBase extends javax.swing.JFrame{
      */
     
     protected void agregarMensaje(DefaultListModel<String> modelo, String mensaje) {
-        if (modelo.size() == 6) {
-            modelo.remove(5);
+        String[] lineas = mensaje.split("\n");
+
+        for (int i = lineas.length - 1; i >= 0; i--) {
+            if (modelo.size() == 6) {
+                modelo.remove(5);
+            }
+            modelo.add(0, lineas[i]);
         }
-        modelo.add(0, mensaje);
-        modelo.add(1, "\n");
     }
+
 
     protected void mensaje(DefaultListModel<String> modelo, String ex, String msg){
         agregarMensaje(modelo, ex + msg);

@@ -6,8 +6,8 @@ public class Gratis extends Beneficio{
 
     private double valorGratis;
     
-    public Gratis(double p){
-        valorGratis = p;
+    public Gratis(int p){
+        valorGratis = (double)p;
     }
 
     @Override

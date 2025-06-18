@@ -8,8 +8,12 @@ import controlador.ClienteControlador;
 import dominio.Categoria;
 import dominio.Item;
 import dominio.Pedido;
+import dominio.user.Gestor;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -27,13 +31,25 @@ public class VistaClientes extends VistaBase {
      */
     public VistaClientes() {
         initComponents();
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (puedeCerrarVentana()) {
+                    dispose();
+                } else {
+                    mandarMensaje("Debe Finalizar el Servicio");
+                }
+            }
 
+        });
+        
         setLocationRelativeTo(null); 
         
         this.controlador = new ClienteControlador(this);
         
         inicializar();
-        
     }
     
     public void inicializar() {
@@ -514,12 +530,18 @@ public class VistaClientes extends VistaBase {
         modelo.setColumnIdentifiers(new Object[] { "Item", "Comentario", "Estado", "Unidad", "Gestor", "Precio" });
         
         for (Pedido p : pedidos) {
+            
+            String gestor;
+            Gestor g = p.getGestor();
+            if(g == null) gestor = "En espera";
+            else gestor = g.getNombrecompleto();
+            
             modelo.addRow(new Object[] {
                 p.getItem(),
                 p.getComentario(),
                 p.miEstado(),
                 p.getUnidad(),
-                p.getGestor(),
+                gestor,
                 p.getPrecio()
             });
         }
@@ -560,6 +582,9 @@ public class VistaClientes extends VistaBase {
         txtPass.setText("");
     }
 
-    
+    private boolean puedeCerrarVentana() {
+        //si esta logeado
+        return !this.controlador.estoyLogeado();
+    }
 
 }

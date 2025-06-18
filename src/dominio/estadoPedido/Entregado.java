@@ -22,12 +22,12 @@ public class Entregado extends Estado {
 
     @Override
     public void finalizar() throws PedidoClienteException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new PedidoClienteException("El pedido ya está entregado!");
     }
 
     @Override
     public void entregar() throws PedidoClienteException {
-        throw new PedidoClienteException("El pedido ya está entregado");
+        throw new PedidoClienteException("El pedido ya está entregado!");
     }
 
     @Override

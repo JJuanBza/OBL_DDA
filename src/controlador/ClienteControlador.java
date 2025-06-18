@@ -42,7 +42,7 @@ public class ClienteControlador implements Observador{
         this.cliente = cliente;
         this.vincularDispositivo();
         
-        this.dispositivo.asociarObservadorController(this);
+        //this.dispositivo.asociarObservadorController(this);
     }
     
     private void vincularDispositivo(){
@@ -57,6 +57,7 @@ public class ClienteControlador implements Observador{
             c.yaEstoyLogeado();
             
             this.setCliente(c);
+            this.dispositivo.asociarObservadorController(this);
             c.login();
             
             vista.mandarMensaje("Bienvenido " + c.getNombreCompleto());
@@ -134,6 +135,8 @@ public class ClienteControlador implements Observador{
             
             //desvincular dispositivo
             this.dispositivo.desvincular();
+            this.setCliente(null);
+            
             vista.inicializar();
             
         }catch(UsuarioNULOException ex){
@@ -182,5 +185,9 @@ public class ClienteControlador implements Observador{
             //actualizar el monto total
             this.actualizarCostoTotal();
         }
+    }
+
+    public boolean estoyLogeado() {
+        return this.cliente != null && this.cliente.getLogged();
     }
 }

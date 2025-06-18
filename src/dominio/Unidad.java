@@ -49,7 +49,12 @@ public class Unidad extends Observable implements Observador{
 
     @Override
     public void actualizar(Observable origen, Object evento) {
-        this.actualizarPedidos();
+        avisar(EstadosSistema.ACTUALIZAR);
+        avisar(EstadosSistema.BAJA_PEDIDO);
+    }
+
+    void removerPedido(Pedido pedido) {
+        this.pedidos.remove(pedido);
     }
 
 }
